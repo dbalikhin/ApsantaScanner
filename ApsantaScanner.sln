@@ -1,0 +1,70 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32002.185
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApsantaScanner", "src\ApsantaScanner\ApsantaScanner.csproj", "{4644B8E4-69AB-46E1-8064-6D8D31859CF2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApsantaScanner.CodeFixes", "src\ApsantaScanner.CodeFixes\ApsantaScanner.CodeFixes.csproj", "{B470925D-7A60-4FF3-969E-660644DEB4F8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApsantaScanner.Package", "src\ApsantaScanner.Package\ApsantaScanner.Package.csproj", "{125E5926-DFA3-4DBF-BB4A-5A2CC54D0D96}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApsantaScanner.Test", "src\ApsantaScanner.Test\ApsantaScanner.Test.csproj", "{00DBF3AF-5441-43B5-AC4C-9D4C47445A6D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApsantaScanner.Vsix", "src\ApsantaScanner.Vsix\ApsantaScanner.Vsix.csproj", "{DD6B8AB9-70E8-4B56-82F1-A366F4B81E60}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FlowAnalysis.Utilities", "src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.shproj", "{FCB56CBA-FA35-46A8-86B7-BAE5433197D9}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Analyzer.Utilities", "src\Utilities\Compiler\Analyzer.Utilities.shproj", "{EC946164-1E17-410B-B7D9-7DE7E6268D63}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Roslyn", "Roslyn", "{C8E46C4E-CC81-44F5-80E6-C291960045C7}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Workspaces.Utilities", "src\Utilities\Workspaces\Workspaces.Utilities.shproj", "{99F594B1-3916-471D-A761-A6731FC50E9A}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\Utilities\Compiler\Analyzer.Utilities.projitems*{4644b8e4-69ab-46e1-8064-6d8d31859cf2}*SharedItemsImports = 5
+		src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.projitems*{4644b8e4-69ab-46e1-8064-6d8d31859cf2}*SharedItemsImports = 5
+		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{4644b8e4-69ab-46e1-8064-6d8d31859cf2}*SharedItemsImports = 5
+		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{99f594b1-3916-471d-a761-a6731fc50e9a}*SharedItemsImports = 13
+		src\Utilities\Compiler\Analyzer.Utilities.projitems*{ec946164-1e17-410b-b7d9-7de7e6268d63}*SharedItemsImports = 13
+		src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.projitems*{fcb56cba-fa35-46a8-86b7-bae5433197d9}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4644B8E4-69AB-46E1-8064-6D8D31859CF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4644B8E4-69AB-46E1-8064-6D8D31859CF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4644B8E4-69AB-46E1-8064-6D8D31859CF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4644B8E4-69AB-46E1-8064-6D8D31859CF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B470925D-7A60-4FF3-969E-660644DEB4F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B470925D-7A60-4FF3-969E-660644DEB4F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B470925D-7A60-4FF3-969E-660644DEB4F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B470925D-7A60-4FF3-969E-660644DEB4F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{125E5926-DFA3-4DBF-BB4A-5A2CC54D0D96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{125E5926-DFA3-4DBF-BB4A-5A2CC54D0D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{125E5926-DFA3-4DBF-BB4A-5A2CC54D0D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{125E5926-DFA3-4DBF-BB4A-5A2CC54D0D96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00DBF3AF-5441-43B5-AC4C-9D4C47445A6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00DBF3AF-5441-43B5-AC4C-9D4C47445A6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00DBF3AF-5441-43B5-AC4C-9D4C47445A6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00DBF3AF-5441-43B5-AC4C-9D4C47445A6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD6B8AB9-70E8-4B56-82F1-A366F4B81E60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD6B8AB9-70E8-4B56-82F1-A366F4B81E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD6B8AB9-70E8-4B56-82F1-A366F4B81E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD6B8AB9-70E8-4B56-82F1-A366F4B81E60}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FCB56CBA-FA35-46A8-86B7-BAE5433197D9} = {C8E46C4E-CC81-44F5-80E6-C291960045C7}
+		{EC946164-1E17-410B-B7D9-7DE7E6268D63} = {C8E46C4E-CC81-44F5-80E6-C291960045C7}
+		{99F594B1-3916-471D-A761-A6731FC50E9A} = {C8E46C4E-CC81-44F5-80E6-C291960045C7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {58E6661E-E08D-4A86-8085-D8134523C968}
+	EndGlobalSection
+EndGlobal

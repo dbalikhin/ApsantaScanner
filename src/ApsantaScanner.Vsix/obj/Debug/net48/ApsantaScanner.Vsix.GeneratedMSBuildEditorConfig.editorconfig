@@ -1,0 +1,3 @@
+is_global = true
+build_property.RootNamespace = ApsantaScanner.Vsix
+build_property.ProjectDir = C:\gh\ApsantaScannerGH\src\ApsantaScanner.Vsix\
