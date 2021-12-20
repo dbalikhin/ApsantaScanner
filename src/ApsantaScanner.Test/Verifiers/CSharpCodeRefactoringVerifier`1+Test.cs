@@ -1,25 +1,40 @@
-﻿using Microsoft.CodeAnalysis.CodeRefactorings;
+﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the MIT license.  See License.txt in the project root for license information.
+
+using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeRefactorings;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Testing;
+using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Testing.Verifiers;
 
 namespace ApsantaScanner.Test
 {
-    public static partial class CSharpCodeRefactoringVerifier<TCodeRefactoring>
-        where TCodeRefactoring : CodeRefactoringProvider, new()
+    public static partial class CSharpCodeRefactoringVerifier<TRefactoring>
+        where TRefactoring : CodeRefactoringProvider, new()
     {
-        public class Test : CSharpCodeRefactoringTest<TCodeRefactoring, MSTestVerifier>
+        public class Test : CSharpCodeRefactoringTest<TRefactoring, XUnitVerifier>
         {
             public Test()
             {
-                SolutionTransforms.Add((solution, projectId) =>
-                {
-                    var compilationOptions = solution.GetProject(projectId).CompilationOptions;
-                    compilationOptions = compilationOptions.WithSpecificDiagnosticOptions(
-                        compilationOptions.SpecificDiagnosticOptions.SetItems(CSharpVerifierHelper.NullableWarnings));
-                    solution = solution.WithProjectCompilationOptions(projectId, compilationOptions);
+                ReferenceAssemblies = AdditionalMetadataReferences.Default;
+            }
 
-                    return solution;
-                });
+            private static ImmutableDictionary<string, ReportDiagnostic> NullableWarnings
+                => CSharpCodeFixVerifier<EmptyDiagnosticAnalyzer, EmptyCodeFixProvider>.Test.NullableWarnings;
+
+            public LanguageVersion LanguageVersion { get; set; } = LanguageVersion.CSharp7_3;
+
+            protected override CompilationOptions CreateCompilationOptions()
+            {
+                var compilationOptions = base.CreateCompilationOptions();
+                return compilationOptions.WithSpecificDiagnosticOptions(
+                    compilationOptions.SpecificDiagnosticOptions.SetItems(NullableWarnings));
+            }
+
+            protected override ParseOptions CreateParseOptions()
+            {
+                return ((CSharpParseOptions)base.CreateParseOptions()).WithLanguageVersion(LanguageVersion);
             }
         }
     }

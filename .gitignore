@@ -1,0 +1,17 @@
+
+src/ApsantaScanner/obj/*
+src/ApsantaScanner/bin/*
+src/ApsantaScanner/obj/Debug/netstandard2.0/ApsantaScanner.GeneratedMSBuildEditorConfig.editorconfig
+
+src/ApsantaScanner.Test/obj/*
+src/ApsantaScanner.Test/bin/*
+
+src/ApsantaScanner.CodeFixes/obj/*
+src/ApsantaScanner.CodeFixes/bin/*
+
+src/ApsantaScanner.Package/obj/*
+src/ApsantaScanner.Package/bin/*
+
+src/ApsantaScanner.Vsix/obj/*
+src/ApsantaScanner.Vsix/bin/*
+
