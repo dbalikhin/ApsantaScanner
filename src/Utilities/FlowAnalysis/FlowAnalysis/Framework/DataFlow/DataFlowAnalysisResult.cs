@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using Analyzer.Utilities.Extensions;
+using Analyzer.Utilities.FlowAnalysis.Analysis.TaintedDataAnalysis;
 using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow.PointsToAnalysis;
 using Microsoft.CodeAnalysis.Operations;
 
@@ -139,6 +140,25 @@ namespace Microsoft.CodeAnalysis.FlowAnalysis.DataFlow
 
                 return value;
             }
+        }
+        internal bool InterproceduralResultAvailable()
+        {
+            return _interproceduralResultsMap.Count > 0;
+        }
+
+        internal List<IOperation> GetTaintedOperations()
+        {
+
+            List<IOperation> list = new();
+            foreach (var kvp in _operationStateMap)
+            {
+                if ((kvp.Value as TaintedDataAbstractValue).Kind == TaintedDataAbstractValueKind.Tainted)
+                {
+                    list.Add(kvp.Key);
+                }
+            }
+
+            return list;
         }
 
         internal DataFlowAnalysisResult<TBlockAnalysisResult, TAbstractAnalysisValue>? TryGetInterproceduralResult(IOperation operation)

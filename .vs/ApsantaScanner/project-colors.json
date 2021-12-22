@@ -1,0 +1,31 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "4644b8e4-69ab-46e1-8064-6d8d31859cf2": {
+      "ProjectGuid": "4644b8e4-69ab-46e1-8064-6d8d31859cf2",
+      "DisplayName": "ApsantaScanner",
+      "ColorIndex": 0
+    },
+    "fcb56cba-fa35-46a8-86b7-bae5433197d9": {
+      "ProjectGuid": "fcb56cba-fa35-46a8-86b7-bae5433197d9",
+      "DisplayName": "FlowAnalysis.Utilities",
+      "ColorIndex": 1
+    },
+    "ec946164-1e17-410b-b7d9-7de7e6268d63": {
+      "ProjectGuid": "ec946164-1e17-410b-b7d9-7de7e6268d63",
+      "DisplayName": "Analyzer.Utilities",
+      "ColorIndex": 2
+    },
+    "00dbf3af-5441-43b5-ac4c-9d4c47445a6d": {
+      "ProjectGuid": "00dbf3af-5441-43b5-ac4c-9d4c47445a6d",
+      "DisplayName": "ApsantaScanner.Test",
+      "ColorIndex": 3
+    },
+    "31aa94cd-1b9f-4725-8d60-22a665a31cda": {
+      "ProjectGuid": "31aa94cd-1b9f-4725-8d60-22a665a31cda",
+      "DisplayName": "MsUnit",
+      "ColorIndex": 4
+    }
+  },
+  "NextColorIndex": 5
+}

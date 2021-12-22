@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the MIT license.  See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -232,21 +233,62 @@ namespace ApsantaScanner.Security
                                                     return;
                                                 }
 
+                                                
+
                                                 foreach (TaintedDataSourceSink sourceSink in taintedDataAnalysisResult.TaintedDataSourceSinks)
                                                 {
                                                     if (!sourceSink.SinkKinds.Contains(SinkKind))
                                                     {
                                                         continue;
-                                                    }
-
+                                                    }                                                   
+                                                    
+                                
                                                     foreach (SymbolAccess sourceOrigin in sourceSink.SourceOrigins)
                                                     {
+                                                        var initialTaintedOperations = taintedDataAnalysisResult.GetTaintedOperations();
+                                                        List<IOperation> taintedOperations = new();
+                                                        AddCurrentLevelResults(initialTaintedOperations, taintedDataAnalysisResult);
+
+
+
+                                                        void AddCurrentLevelResults(List<IOperation> operations, DataFlowAnalysisResult<TaintedDataBlockAnalysisResult, TaintedDataAbstractValue> taintedResult)
+                                                        {
+                                                            // add results from the current method
+                                                            taintedOperations.AddRange(operations.Where(i => i.Parent == null));
+                                                            // assume there is only a single invocation in a method that leads from the specific source to the sink
+                                                            var invocation = operations.FirstOrDefault(op => op.Kind is OperationKind.Invocation or OperationKind.DynamicInvocation);
+                                                            if (invocation == null)
+                                                            {
+                                                                // need to exit earlier?
+                                                            }
+
+                                                            if (taintedResult.InterproceduralResultAvailable())
+                                                            {
+                                                                var r = taintedResult.TryGetInterproceduralResult(invocation);
+                                                                if (r != null)
+                                                                {
+                                                                    var taintedOps = r.GetTaintedOperations();
+
+                                                                    AddCurrentLevelResults(taintedOps, r);
+                                                                }
+                                                            }
+
+                                                        }
+
+                                                        // prepare a list of addional locations starting from the source
+                                                        var additionalLocations = new Location[taintedOperations.Count + 1];
+                                                        additionalLocations[0] = sourceOrigin.Location;
+                                                        for (int i = 0; i < taintedOperations.Count; i++)
+                                                        {
+                                                            additionalLocations[i + 1] = taintedOperations[i].Syntax.GetLocation();
+                                                        }
+                                                        
                                                         // Something like:
                                                         // CA3001: Potential SQL injection vulnerability was found where '{0}' in method '{1}' may be tainted by user-controlled data from '{2}' in method '{3}'.
                                                         Diagnostic diagnostic = Diagnostic.Create(
                                                             TaintedDataEnteringSinkDescriptor,
                                                             sourceSink.Sink.Location,
-                                                            additionalLocations: new Location[] { sourceOrigin.Location },
+                                                            additionalLocations: additionalLocations,
                                                             messageArgs: new object[] {
                                                         sourceSink.Sink.Symbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat),
                                                         sourceSink.Sink.AccessingMethod.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat),
