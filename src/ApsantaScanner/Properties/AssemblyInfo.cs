@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // In SDK-style projects such as this one, several assembly attributes that were historically
@@ -11,7 +12,8 @@ using System.Runtime.InteropServices;
 // attribute to true on that type.
 
 [assembly: ComVisible(false)]
+[assembly: InternalsVisibleTo("ApsantaScanner.Test")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM.
-
 [assembly: Guid("877af8da-ece0-4201-8c49-e53eae46fa11")]

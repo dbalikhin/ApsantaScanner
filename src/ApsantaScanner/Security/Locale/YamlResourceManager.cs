@@ -44,7 +44,7 @@ namespace ApsantaScanner.Security.Locale
         {
             var assembly = typeof(YamlResourceManager).GetTypeInfo().Assembly;
 
-            using (Stream stream = assembly.GetManifestResourceStream("ApsantaScanner.Config." + MessagesFileName))
+            using (Stream stream = assembly.GetManifestResourceStream("ApsantaScanner.Security.Config." + MessagesFileName))
             using (var reader = new StreamReader(stream))
             {
                 var yaml = new YamlStream();
