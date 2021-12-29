@@ -10,6 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Security\Config\Main.yml" />
+    <None Remove="Security\Config\Messages.yml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Security\Config\Main.yml" />
+    <EmbeddedResource Include="Security\Config\Messages.yml" />
+  </ItemGroup>
+
+  <ItemGroup>
 	  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 	  <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
 		  <PrivateAssets>all</PrivateAssets>

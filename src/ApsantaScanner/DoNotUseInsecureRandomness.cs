@@ -13,7 +13,8 @@ namespace Apsanta.Scanner
     [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
     public sealed class DoNotUseInsecureRandomness : DiagnosticAnalyzer
     {
-        internal const string DiagnosticId = "CA5394";
+        // modified id, just in case
+        internal const string DiagnosticId = "ASCA5394";
 
         internal static readonly DiagnosticDescriptor Rule = DiagnosticDescriptorHelper.Create(
             DiagnosticId,
