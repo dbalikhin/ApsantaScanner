@@ -15,3 +15,4 @@ src/ApsantaScanner.Package/bin/*
 src/ApsantaScanner.Vsix/obj/*
 src/ApsantaScanner.Vsix/bin/*
 
+.vs/ApsantaScanner/v17/TestStore/*
