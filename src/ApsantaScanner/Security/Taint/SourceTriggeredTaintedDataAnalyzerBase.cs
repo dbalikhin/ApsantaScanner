@@ -10,6 +10,7 @@ using Analyzer.Utilities;
 using Analyzer.Utilities.Extensions;
 using Analyzer.Utilities.FlowAnalysis.Analysis.TaintedDataAnalysis;
 using Analyzer.Utilities.PooledObjects;
+using ApsantaScanner.Security.Config;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.FlowAnalysis;
@@ -58,14 +59,15 @@ namespace ApsantaScanner.Security
                 (compilationContext) =>
                 {
                     Compilation compilation = compilationContext.Compilation;
-                    TaintedDataConfig taintedDataConfig = TaintedDataConfig.GetOrCreate(compilation);
-                    TaintedDataSymbolMap<SourceInfo> sourceInfoSymbolMap = taintedDataConfig.GetSourceSymbolMap(SinkKind);
+                    var config = Configuration.GetOrCreate(compilationContext);
+                    //TaintedDataConfig taintedDataConfig = TaintedDataConfig.GetOrCreate(compilation);
+                    TaintedDataSymbolMap<SourceInfo> sourceInfoSymbolMap = config.TaintConfiguration.GetSourceSymbolMap(SinkKind);
                     if (sourceInfoSymbolMap.IsEmpty)
                     {
                         return;
                     }
 
-                    TaintedDataSymbolMap<SinkInfo> sinkInfoSymbolMap = taintedDataConfig.GetSinkSymbolMap(SinkKind);
+                    TaintedDataSymbolMap<SinkInfo> sinkInfoSymbolMap = config.TaintConfiguration.GetSinkSymbolMap(SinkKind);
                     if (sinkInfoSymbolMap.IsEmpty)
                     {
                         return;
@@ -187,7 +189,7 @@ namespace ApsantaScanner.Security
                                 },
                                 OperationKind.Invocation);
 
-                            if (TaintedDataConfig.HasTaintArraySource(SinkKind))
+                            if (config.TaintConfiguration.HasTaintArraySource(SinkKind, config))
                             {
                                 operationBlockStartContext.RegisterOperationAction(
                                     operationAnalysisContext =>
@@ -231,7 +233,7 @@ namespace ApsantaScanner.Security
                                                     operationBlockAnalysisContext.Options,
                                                     TaintedDataEnteringSinkDescriptor,
                                                     sourceInfoSymbolMap,
-                                                    taintedDataConfig.GetSanitizerSymbolMap(SinkKind),
+                                                    config.TaintConfiguration.GetSanitizerSymbolMap(SinkKind),
                                                     sinkInfoSymbolMap);
                                                 if (taintedDataAnalysisResult == null)
                                                 {

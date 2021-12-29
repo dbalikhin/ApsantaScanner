@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ApsantaScanner")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+47c27d0ef283942c3f91ebbfa5fcff79c49c5f54")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+296df1d09ff21ce716ff40cb8b36875528c4ec2b")]
 [assembly: System.Reflection.AssemblyProductAttribute("ApsantaScanner")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ApsantaScanner")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

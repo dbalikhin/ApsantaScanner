@@ -35,8 +35,8 @@ namespace ApsantaScanner.Security.Config
     /// </summary>
     internal class ConfigurationReader
     {
-        private const string BuiltinConfigName = "ApsantaScanner.Config.Main.yml";
-        private const string ConfigName = "ApsantaScanner.config.yml";
+        private const string BuiltinConfigName = "ApsantaScanner.Security.Config.Main.yml";
+        private const string ConfigName = "ApsantaScanner.Security.config.yml";
         private const string UserConfigName = "ApsantaScanner\\config-{0}.yml";
         private string UserConfigFile => UserConfigFileCached.Value;
 
