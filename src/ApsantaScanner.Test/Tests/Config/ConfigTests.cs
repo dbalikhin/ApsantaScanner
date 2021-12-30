@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ApsantaScanner.Security.Config;
+using ApsantaScanner.Config;
 using ApsantaScanner.Test.Helpers;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

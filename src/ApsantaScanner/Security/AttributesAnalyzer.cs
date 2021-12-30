@@ -26,7 +26,7 @@ using System.Diagnostics;
 using System.Linq;
 using Analyzer.Utilities;
 using Analyzer.Utilities.Extensions;
-using ApsantaScanner.Security.Config;
+using ApsantaScanner.Config;
 using ApsantaScanner.Security.Locale;
 using ApsantaScanner.Security.Utils;
 using Microsoft.CodeAnalysis;

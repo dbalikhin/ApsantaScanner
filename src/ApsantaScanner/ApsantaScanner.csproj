@@ -10,13 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Security\Config\Main.yml" />
-    <None Remove="Security\Config\Messages.yml" />
+    <None Remove="Config\Main.yml" />
+    <None Remove="Config\Messages.yml" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Security\Config\Main.yml" />
-    <EmbeddedResource Include="Security\Config\Messages.yml" />
+    <EmbeddedResource Include="Config\Main.yml" />
+    <EmbeddedResource Include="Config\Messages.yml" />
   </ItemGroup>
 
   <ItemGroup>

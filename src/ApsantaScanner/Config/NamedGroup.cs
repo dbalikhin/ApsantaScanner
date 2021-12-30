@@ -24,7 +24,7 @@ using ApsantaScanner.Security.Locale;
 using ApsantaScanner.Security.Utils;
 using Microsoft.CodeAnalysis;
 
-namespace ApsantaScanner.Security.Config
+namespace ApsantaScanner.Config
 {
     internal class AttributeCondition
     {

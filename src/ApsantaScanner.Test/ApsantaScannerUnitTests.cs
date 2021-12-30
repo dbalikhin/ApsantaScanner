@@ -52,7 +52,7 @@ namespace ApsantaScanner.Test
         }
     }";
 
-            var expected = VerifyCS.Diagnostic("ApsantaScanner").WithLocation(0).WithArguments("TypeName");
+            var expected = VerifyCS.Diagnostic("AS0001").WithLocation(0).WithArguments("TypeName");
             await VerifyCS.VerifyCodeFixAsync(test, expected, fixtest);
         }
     }

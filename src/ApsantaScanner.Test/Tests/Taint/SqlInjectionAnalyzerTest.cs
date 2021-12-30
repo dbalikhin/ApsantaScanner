@@ -287,10 +287,12 @@ End Namespace
             [DataRow("new SQLiteCommand(\"select\", new SQLiteConnection())", false, null)]
             [DataRow("new SQLiteCommand(input, new SQLiteConnection(), new SQLiteConnection().BeginTransaction())", true, "SCS0002")]
             [DataRow("new SQLiteCommand(\"select\", new SQLiteConnection(), new SQLiteConnection().BeginTransaction())", false, null)]
-            [DataRow("SQLiteCommand.Execute(input, SQLiteExecuteType.Reader, CommandBehavior.Default, null)", true, "SCS0002")]
-            [DataRow("SQLiteCommand.Execute(\"select\", SQLiteExecuteType.Reader, CommandBehavior.Default, null)", false, null)]
-            [DataRow("SQLiteCommand.Execute(input, SQLiteExecuteType.Reader, null)", true, "SCS0002")]
-            [DataRow("SQLiteCommand.Execute(\"select\", SQLiteExecuteType.Reader, null)", false, null)]
+            // TODO:need to replace with ExecureX method?
+            // https://docs.microsoft.com/en-us/dotnet/api/microsoft.data.sqlite.sqlitecommand.executereader?view=msdata-sqlite-6.0.0
+            //[DataRow("SQLiteCommand.Execute(input, SQLiteExecuteType.Reader, CommandBehavior.Default, null)", true, "SCS0002")]
+            //[DataRow("SQLiteCommand.Execute(\"select\", SQLiteExecuteType.Reader, CommandBehavior.Default, null)", false, null)]
+            //[DataRow("SQLiteCommand.Execute(input, SQLiteExecuteType.Reader, null)", true, "SCS0002")] 
+            // [DataRow("SQLiteCommand.Execute(\"select\", SQLiteExecuteType.Reader, null)", false, null)]
             [DataRow("new SQLiteDataAdapter(\"\", \"\")", false, null)]
             [DataRow("new SQLiteDataAdapter(input, \"\")", true, "SCS0002")]
 

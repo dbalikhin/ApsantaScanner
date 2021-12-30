@@ -31,12 +31,13 @@ using Analyzer.Utilities;
 using Analyzer.Utilities.Extensions;
 using Analyzer.Utilities.FlowAnalysis.Analysis.TaintedDataAnalysis;
 using Analyzer.Utilities.PooledObjects;
+using ApsantaScanner.Security;
 using ApsantaScanner.Security.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using SecurityCodeScan.Analyzers.Taint;
 
-namespace ApsantaScanner.Security.Config
+namespace ApsantaScanner.Config
 {
     internal class TaintConfiguration
     {
@@ -292,7 +293,7 @@ namespace ApsantaScanner.Security.Config
                             ImmutableHashSet<(MethodMatcher, ImmutableHashSet<(string, string)>)>.Empty,
                         transferProperties: ImmutableHashSet<string>.Empty,
                         taintConstantArray: false,
-                        constantArrayLengthMatcher: null                        
+                        constantArrayLengthMatcher: null
                         );
                 }
                 else
@@ -622,37 +623,37 @@ namespace ApsantaScanner.Security.Config
                     sinkMethodParameters: sink.Methods != null ? sink.Methods.Where(x => x.Condition == null)
                                                                              .Select(x => (x.Name, x.Arguments)) : null
                     );
-                    /*
-                    sinkMethodMatchingParameters:
-                        sink.Methods != null
-                            ? sink.Methods.Where(x => x.Condition != null)
-                                          .Select(method => new ValueTuple<MethodMatcher, string[]>
-                                (
-                                    (methodName, arguments) =>
+                /*
+                sinkMethodMatchingParameters:
+                    sink.Methods != null
+                        ? sink.Methods.Where(x => x.Condition != null)
+                                      .Select(method => new ValueTuple<MethodMatcher, string[]>
+                            (
+                                (methodName, arguments) =>
+                                {
+                                    if (methodName != method.Name)
+                                        return false;
+
+                                    foreach (var condition in method.Condition)
                                     {
-                                        if (methodName != method.Name)
+                                        var arg = arguments.FirstOrDefault(x => x.Parameter.Name == condition.argName);
+                                        if (arg == null)
                                             return false;
 
-                                        foreach (var condition in method.Condition)
-                                        {
-                                            var arg = arguments.FirstOrDefault(x => x.Parameter.Name == condition.argName);
-                                            if (arg == null)
-                                                return false;
+                                        if (!arg.Value.ConstantValue.HasValue)
+                                            return false;
 
-                                            if (!arg.Value.ConstantValue.HasValue)
-                                                return false;
+                                        if (!Equals(condition.value, arg.Value.ConstantValue.Value))
+                                            return false;
+                                    }
 
-                                            if (!Equals(condition.value, arg.Value.ConstantValue.Value))
-                                                return false;
-                                        }
-
-                                        return true;
-                                    },
-                                    method.Arguments
-                                )
-                              )
-                            : null);
-                    */
+                                    return true;
+                                },
+                                method.Arguments
+                            )
+                          )
+                        : null);
+                */
             }
 
             return sinkInfosBuilder.ToImmutableAndFree();

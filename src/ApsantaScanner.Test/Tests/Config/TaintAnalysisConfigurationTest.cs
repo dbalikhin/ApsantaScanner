@@ -19,7 +19,7 @@ namespace ApsantaScanner.Test.Tests.Config
 
         private static readonly PortableExecutableReference[] References =
         {
-            //MetadataReference.CreateFromFile(typeof(System.Web.Mvc.Controller).Assembly.Location)
+            MetadataReference.CreateFromFile(typeof(System.Web.Mvc.Controller).Assembly.Location)
         };
 
         protected override IEnumerable<MetadataReference> GetAdditionalReferences() => References;
@@ -102,10 +102,11 @@ Sinks:
         public async Task AddSink()
         {
             var cSharpTest = @"
-using System.Web.Mvc;
 
 namespace sample
 {
+    using System.Web.Mvc;
+
     public class TestController : Controller
     {
         public void Vulnerable(string param)

@@ -10,8 +10,8 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using ApsantaScanner.Security.Utils;
-using ApsantaScanner.Security.Config;
 using ApsantaScanner.Security;
+using ApsantaScanner.Config;
 
 namespace ApsantaScanner.Test.Helpers
 {

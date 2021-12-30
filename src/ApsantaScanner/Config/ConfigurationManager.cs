@@ -27,16 +27,17 @@ using Microsoft.CodeAnalysis;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 using System.Text.RegularExpressions;
+using ApsantaScanner.Security;
 
-namespace ApsantaScanner.Security.Config
+namespace ApsantaScanner.Config
 {
     /// <summary>
     /// The implementation must be thread-safe because it is used as static field!
     /// </summary>
     internal class ConfigurationReader
     {
-        private const string BuiltinConfigName = "ApsantaScanner.Security.Config.Main.yml";
-        private const string ConfigName = "ApsantaScanner.Security.config.yml";
+        private const string BuiltinConfigName = "ApsantaScanner.Config.Main.yml";
+        private const string ConfigName = "ApsantaScanner.config.yml";
         private const string UserConfigName = "ApsantaScanner\\config-{0}.yml";
         private string UserConfigFile => UserConfigFileCached.Value;
 

@@ -17,12 +17,13 @@
  */
 
 #nullable disable
+using ApsantaScanner;
 using System;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace ApsantaScanner.Security.Config
+namespace ApsantaScanner.Config
 {
     internal class ValueTupleNodeDeserializer : INodeDeserializer
     {
