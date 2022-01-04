@@ -23,11 +23,14 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Workspaces.Utilities", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudio2022", "VisualStudio2022\VisualStudio2022.csproj", "{1BA321F8-E4BC-4C67-BC8D-E24CF27BE427}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ApstantaScanner.Vsix.Shared", "ApstantaScanner.Vsix.Shared\ApstantaScanner.Vsix.Shared.shproj", "{585EC2AD-FDD9-49CE-A843-78987847820B}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\Utilities\Compiler\Analyzer.Utilities.projitems*{4644b8e4-69ab-46e1-8064-6d8d31859cf2}*SharedItemsImports = 5
 		src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.projitems*{4644b8e4-69ab-46e1-8064-6d8d31859cf2}*SharedItemsImports = 5
 		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{4644b8e4-69ab-46e1-8064-6d8d31859cf2}*SharedItemsImports = 5
+		ApstantaScanner.Vsix.Shared\ApstantaScanner.Vsix.Shared.projitems*{585ec2ad-fdd9-49ce-a843-78987847820b}*SharedItemsImports = 13
 		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{99f594b1-3916-471d-a761-a6731fc50e9a}*SharedItemsImports = 13
 		src\Utilities\Compiler\Analyzer.Utilities.projitems*{ec946164-1e17-410b-b7d9-7de7e6268d63}*SharedItemsImports = 13
 		src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.projitems*{fcb56cba-fa35-46a8-86b7-bae5433197d9}*SharedItemsImports = 13
