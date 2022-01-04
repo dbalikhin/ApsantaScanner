@@ -84,11 +84,18 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="readme.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
       <Generator>VsixManifestGenerator</Generator>
       <LastGenOutput>source.extension.cs</LastGenOutput>
     </None>
+    <Content Include="MarkdownViewer\Margin\highlight-dark.css" />
+    <Content Include="MarkdownViewer\Margin\highlight.css" />
+    <Content Include="MarkdownViewer\Margin\md-template.html" />
+    <Content Include="MarkdownViewer\Margin\prism-dark.css" />
+    <Content Include="MarkdownViewer\Margin\prism.css" />
+    <Content Include="MarkdownViewer\Margin\prism.js" />
     <Content Include="Resources\Icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
