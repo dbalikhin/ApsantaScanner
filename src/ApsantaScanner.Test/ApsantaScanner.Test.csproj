@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="References\**" />
+    <EmbeddedResource Remove="References\**" />
+    <None Remove="References\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CassandraCSharpDriver" Version="3.0.9" />
     <PackageReference Include="EnterpriseLibrary.Common" Version="6.0.1304" />
     <PackageReference Include="EnterpriseLibrary.Data" Version="6.0.1304" />
@@ -53,10 +59,6 @@
 
   <ItemGroup>
     <Reference Include="System.Web" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="References\" />
   </ItemGroup>
 
 </Project>
