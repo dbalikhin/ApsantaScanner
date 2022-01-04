@@ -17,14 +17,14 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
     /// Maintains currently selected and navigated to <see cref="SarifErrorListItem"/> from the Visual Studio error list.
     /// </summary>
     [Export(typeof(IErrorListEventSelectionService))]
-    internal class SarifErrorListEventProcessor : TableControlEventProcessorBase, ISarifErrorListEventSelectionService
+    internal class SarifErrorListEventProcessor : TableControlEventProcessorBase, IErrorListEventSelectionService
     {
-        private SarifErrorListItem currentlySelectedItem;
-        private SarifErrorListItem currentlyNavigatedItem;
-        private IEnumerable<SarifErrorListItem> selectedItems;
+        private ErrorListItem currentlySelectedItem;
+        private ErrorListItem currentlyNavigatedItem;
+        private IEnumerable<ErrorListItem> selectedItems;
 
         /// <inheritdoc/>
-        public SarifErrorListItem SelectedItem
+        public ErrorListItem SelectedItem
         {
             get => this.currentlySelectedItem;
 
@@ -32,38 +32,38 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
             {
                 if (this.currentlySelectedItem != value)
                 {
-                    SarifErrorListItem previouslySelectedItem = this.currentlySelectedItem;
+                    ErrorListItem previouslySelectedItem = this.currentlySelectedItem;
                     this.currentlySelectedItem = value;
 
-                    SelectedItemChanged?.Invoke(this, new SarifErrorListSelectionChangedEventArgs(previouslySelectedItem, this.currentlySelectedItem));
+                    SelectedItemChanged?.Invoke(this, new ErrorListSelectionChangedEventArgs(previouslySelectedItem, this.currentlySelectedItem));
                 }
             }
         }
 
         /// <inheritdoc/>
-        public IEnumerable<SarifErrorListItem> SelectedItems => this.selectedItems;
+        public IEnumerable<ErrorListItem> SelectedItems => this.selectedItems;
 
         /// <inheritdoc/>
-        public event EventHandler<SarifErrorListSelectionChangedEventArgs> SelectedItemChanged;
+        public event EventHandler<ErrorListSelectionChangedEventArgs> SelectedItemChanged;
 
         /// <inheritdoc/>
-        public SarifErrorListItem NavigatedItem
+        public ErrorListItem NavigatedItem
         {
             get => this.currentlyNavigatedItem;
             set
             {
                 if (this.currentlyNavigatedItem != value)
                 {
-                    SarifErrorListItem previouslyNavigatedItem = this.currentlyNavigatedItem;
+                    ErrorListItem previouslyNavigatedItem = this.currentlyNavigatedItem;
                     this.currentlyNavigatedItem = value;
 
-                    NavigatedItemChanged?.Invoke(this, new SarifErrorListSelectionChangedEventArgs(previouslyNavigatedItem, this.currentlyNavigatedItem));
+                    NavigatedItemChanged?.Invoke(this, new ErrorListSelectionChangedEventArgs(previouslyNavigatedItem, this.currentlyNavigatedItem));
                 }
             }
         }
 
         /// <inheritdoc/>
-        public event EventHandler<SarifErrorListSelectionChangedEventArgs> NavigatedItemChanged;
+        public event EventHandler<ErrorListSelectionChangedEventArgs> NavigatedItemChanged;
 
         private IWpfTableControl errorListTableControl;
 
@@ -91,7 +91,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
             // Make sure there is only one selection, that's all we support.
             IEnumerator<ITableEntryHandle> enumerator = (this.errorListTableControl.SelectedEntries ?? Enumerable.Empty<ITableEntryHandle>()).GetEnumerator();
             ITableEntryHandle selectedTableEntry = null;
-            ICollection<SarifErrorListItem> selectedErrorListItems = null;
+            ICollection<ErrorListItem> selectedErrorListItems = null;
             int itemCount = 0;
 
             while (enumerator.MoveNext())
@@ -99,25 +99,25 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
                 itemCount++;
                 ITableEntryHandle current = enumerator.Current;
                 selectedTableEntry ??= current;
-                if (this.TryGetSarifResult(current, out SarifErrorListItem sarifResult))
+                if (this.TryGetSarifResult(current, out ErrorListItem sarifResult))
                 {
-                    selectedErrorListItems ??= new List<SarifErrorListItem>();
+                    selectedErrorListItems ??= new List<ErrorListItem>();
                     selectedErrorListItems.Add(sarifResult);
                 }
             }
 
             selectedTableEntry = (itemCount > 1) ? null : selectedTableEntry;
-            SarifErrorListItem selectedSarifErrorItem = null;
+            ErrorListItem selectedSarifErrorItem = null;
             if (selectedTableEntry != null)
             {
                 this.TryGetSarifResult(selectedTableEntry, out selectedSarifErrorItem);
             }
 
-            SarifErrorListItem previouslySelectedItem = this.currentlySelectedItem;
+            ErrorListItem previouslySelectedItem = this.currentlySelectedItem;
             this.currentlySelectedItem = selectedSarifErrorItem;
             this.selectedItems = selectedErrorListItems;
 
-            SelectedItemChanged?.Invoke(this, new SarifErrorListSelectionChangedEventArgs(previouslySelectedItem, this.currentlySelectedItem));
+            SelectedItemChanged?.Invoke(this, new ErrorListSelectionChangedEventArgs(previouslySelectedItem, this.currentlySelectedItem));
         }
 
         public override void PreprocessNavigate(ITableEntryHandle entry, TableEntryNavigateEventArgs e)
@@ -129,7 +129,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
 
             // We need to show the explorer window before navigation so
             // it has time to subscribe to navigation events.
-            if (this.TryGetSarifResult(entry, out SarifErrorListItem aboutToNavigateItem)) ///&&                aboutToNavigateItem?.HasDetails == true)
+            if (this.TryGetSarifResult(entry, out ErrorListItem aboutToNavigateItem)) ///&&                aboutToNavigateItem?.HasDetails == true)
             {
                 //SarifExplorerWindow.Find()?.Show();
             }
@@ -142,9 +142,9 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
 
             base.PostprocessNavigate(entry, e);
 
-            this.TryGetSarifResult(entry, out SarifErrorListItem newlyNavigatedErrorItem);
+            this.TryGetSarifResult(entry, out ErrorListItem newlyNavigatedErrorItem);
 
-            SarifErrorListItem previouslyNavigatedItem = this.currentlyNavigatedItem;
+            ErrorListItem previouslyNavigatedItem = this.currentlyNavigatedItem;
             this.currentlyNavigatedItem = newlyNavigatedErrorItem;
             /*
             if (this.currentlyNavigatedItem != null)
@@ -163,10 +163,10 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
                 this.currentlyNavigatedItem.Locations?.FirstOrDefault()?.NavigateTo(usePreviewPane: false, moveFocusToCaretLocation: moveFocusToCaretLocation);
             }*/
 
-            NavigatedItemChanged?.Invoke(this, new SarifErrorListSelectionChangedEventArgs(previouslyNavigatedItem, this.currentlyNavigatedItem));
+            NavigatedItemChanged?.Invoke(this, new ErrorListSelectionChangedEventArgs(previouslyNavigatedItem, this.currentlyNavigatedItem));
         }
 
-        private bool TryGetSarifResult(ITableEntryHandle entryHandle, out SarifErrorListItem sarifResult)
+        private bool TryGetSarifResult(ITableEntryHandle entryHandle, out ErrorListItem sarifResult)
         {
             sarifResult = null;
             /*

@@ -27,6 +27,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ApstantaScanner.Vsix.Shared
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ApstantaScanner.Vsix.Shared\ApstantaScanner.Vsix.Shared.projitems*{1ba321f8-e4bc-4c67-bc8d-e24cf27be427}*SharedItemsImports = 4
 		src\Utilities\Compiler\Analyzer.Utilities.projitems*{4644b8e4-69ab-46e1-8064-6d8d31859cf2}*SharedItemsImports = 5
 		src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.projitems*{4644b8e4-69ab-46e1-8064-6d8d31859cf2}*SharedItemsImports = 5
 		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{4644b8e4-69ab-46e1-8064-6d8d31859cf2}*SharedItemsImports = 5

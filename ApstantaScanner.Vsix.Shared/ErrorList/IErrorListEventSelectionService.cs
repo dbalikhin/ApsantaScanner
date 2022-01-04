@@ -22,7 +22,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
         /// <remarks>
         /// May be null.
         /// </remarks>
-        SarifErrorListItem SelectedItem { get; set; }
+        ErrorListItem SelectedItem { get; set; }
 
         /// <summary>
         /// Gets the list of selected <see cref="SarifErrorListItem"/> in error list.
@@ -30,12 +30,12 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
         /// <remarks>
         /// May be null.
         /// </remarks>
-        IEnumerable<SarifErrorListItem> SelectedItems { get; }
+        IEnumerable<ErrorListItem> SelectedItems { get; }
 
         /// <summary>
         /// Fired when the selection in the Visual Studio error list has changed.
         /// </summary>
-        event EventHandler<SarifErrorListSelectionChangedEventArgs> SelectedItemChanged;
+        event EventHandler<ErrorListSelectionChangedEventArgs> SelectedItemChanged;
 
         /// <summary>
         /// Gets or sets the currently navigated to <see cref="SarifErrorListItem"/>.
@@ -43,11 +43,11 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
         /// <remarks>
         /// May be null.
         /// </remarks>
-        SarifErrorListItem NavigatedItem { get; set; }
+        ErrorListItem NavigatedItem { get; set; }
 
         /// <summary>
         /// Fired when the Visual Studio error list navigates to an item.
         /// </summary>
-        event EventHandler<SarifErrorListSelectionChangedEventArgs> NavigatedItemChanged;
+        event EventHandler<ErrorListSelectionChangedEventArgs> NavigatedItemChanged;
     }
 }

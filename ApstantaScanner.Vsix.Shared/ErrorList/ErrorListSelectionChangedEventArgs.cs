@@ -8,15 +8,15 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
     /// <summary>
     /// Used as event arguments for the navigate and selection changed events from <see cref="SarifErrorListEventProcessor"/>.
     /// </summary>
-    internal class SarifErrorListSelectionChangedEventArgs : EventArgs
+    internal class ErrorListSelectionChangedEventArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SarifErrorListSelectionChangedEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="ErrorListSelectionChangedEventArgs"/> class.
         /// </summary>
         /// <param name="oldItem">The previous item.</param>
         /// <param name="newItem">The new item.</param>
         /// <remarks>Both parameters may be null.</remarks>
-        public SarifErrorListSelectionChangedEventArgs(SarifErrorListItem oldItem, SarifErrorListItem newItem)
+        public ErrorListSelectionChangedEventArgs(ErrorListItem oldItem, ErrorListItem newItem)
         {
             this.OldItem = oldItem;
             this.NewItem = newItem;
@@ -28,7 +28,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
         /// <remarks>
         /// May be null.
         /// </remarks>
-        public SarifErrorListItem OldItem { get; }
+        public ErrorListItem OldItem { get; }
 
         /// <summary>
         /// Gets the new item.
@@ -36,6 +36,6 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
         /// <remarks>
         /// May be null.
         /// </remarks>
-        public SarifErrorListItem NewItem { get; }
+        public ErrorListItem NewItem { get; }
     }
 }

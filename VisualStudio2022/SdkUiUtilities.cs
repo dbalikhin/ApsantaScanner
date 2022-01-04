@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
@@ -12,12 +11,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Forms;
-
-using Microsoft.CodeAnalysis.Sarif;
-using Microsoft.Sarif.Viewer.Sarif;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -591,7 +585,7 @@ namespace Microsoft.Sarif.Viewer
         internal static List<XamlDoc.Inline> GetMessageInlines(string message, RoutedEventHandler clickHandler)
         {
             List<XamlDoc.Inline> inlines = null;
-            if (!ThreadHelper.CheckAccess() && !SarifViewerPackage.IsUnitTesting)
+            if (!ThreadHelper.CheckAccess()) // && !SarifViewerPackage.IsUnitTesting)
             {
 #pragma warning disable VSTHRD001
                 ThreadHelper.JoinableTaskFactory.Run(async () =>
@@ -712,6 +706,7 @@ namespace Microsoft.Sarif.Viewer
             return s.Replace(@"\[", "[").Replace(@"\]", "]");
         }
 
+        /*
         internal static string GetFileLocationPath(ArtifactLocation artifactLocation, int runId)
         {
             string path = null;
@@ -763,5 +758,6 @@ namespace Microsoft.Sarif.Viewer
 
             return false;
         }
+        */
     }
 }

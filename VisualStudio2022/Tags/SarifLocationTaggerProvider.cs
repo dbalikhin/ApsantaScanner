@@ -1,11 +1,8 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using System.ComponentModel.Composition;
-
-using Microsoft.Sarif.Viewer.ErrorList;
-using Microsoft.VisualStudio.Shell;
+using ApsantaScanner.Vsix.Shared.ErrorList;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -40,7 +37,7 @@ namespace Microsoft.Sarif.Viewer.Tags
         private ITextViewCaretListenerService<ITextMarkerTag> textViewCaretListenerService;
 
         [Import]
-        private ISarifErrorListEventSelectionService sarifErrorListEventSelectionService;
+        private IErrorListEventSelectionService errorListEventSelectionService;
 
 #pragma warning restore IDE0044
 #pragma warning restore CS0649
@@ -77,12 +74,12 @@ namespace Microsoft.Sarif.Viewer.Tags
 
             if (typeof(T) == typeof(IErrorTag))
             {
-                newTagger = new SarifLocationErrorTagger(textBuffer, this.persistentSpanFactory, this.sarifErrorListEventSelectionService);
+                newTagger = new SarifLocationErrorTagger(textBuffer, this.persistentSpanFactory, this.errorListEventSelectionService);
             }
 
             if (typeof(T) == typeof(ITextMarkerTag))
             {
-                newTagger = new SarifLocationTextMarkerTagger(textView, textBuffer, this.persistentSpanFactory, this.textViewCaretListenerService, this.sarifErrorListEventSelectionService);
+                newTagger = new SarifLocationTextMarkerTagger(textView, textBuffer, this.persistentSpanFactory, this.textViewCaretListenerService, this.errorListEventSelectionService);
             }
 
             if (newTagger != null)

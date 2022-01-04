@@ -1,12 +1,9 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using Microsoft.Sarif.Viewer.ErrorList;
-using Microsoft.VisualStudio.Shell;
+using ApsantaScanner.Vsix.Shared.ErrorList;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 
@@ -31,12 +28,12 @@ namespace Microsoft.Sarif.Viewer.Tags
         private readonly string filePath;
 
         private readonly IPersistentSpanFactory persistentSpanFactory;
-        private readonly ISarifErrorListEventSelectionService sarifErrorListEventSelectionService;
+        private readonly IErrorListEventSelectionService ErrorListEventSelectionService;
 
         private List<ISarifLocationTag> currentTags;
         private bool tagsDirty = true;
 
-        public SarifLocationErrorTagger(ITextBuffer textBuffer, IPersistentSpanFactory persistentSpanFactory, ISarifErrorListEventSelectionService sarifErrorListEventSelectionService)
+        public SarifLocationErrorTagger(ITextBuffer textBuffer, IPersistentSpanFactory persistentSpanFactory, IErrorListEventSelectionService errorListEventSelectionService)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -48,8 +45,8 @@ namespace Microsoft.Sarif.Viewer.Tags
             this.TextBuffer = textBuffer;
 
             this.persistentSpanFactory = persistentSpanFactory;
-            this.sarifErrorListEventSelectionService = sarifErrorListEventSelectionService;
-            this.sarifErrorListEventSelectionService.SelectedItemChanged += this.SarifErrorListEventSelectionService_SelectedItemChanged;
+            this.ErrorListEventSelectionService = errorListEventSelectionService;
+            this.ErrorListEventSelectionService.SelectedItemChanged += this.ErrorListEventSelectionService_SelectedItemChanged;
         }
 
         /// <inheritdoc/>
@@ -58,11 +55,15 @@ namespace Microsoft.Sarif.Viewer.Tags
         /// <inheritdoc/>
         public IEnumerable<ITagSpan<IErrorTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
+            return null;
+
+            //TODO: if we need a real visualization, this needs to be fixed.
+            /*
             if (this.tagsDirty)
             {
                 this.tagsDirty = false;
-
-                IEnumerable<SarifErrorListItem> errorsInCurrentFile = CodeAnalysisResultManager
+                
+                IEnumerable<ErrorListItem> errorsInCurrentFile = CodeAnalysisResultManager
                     .Instance
                     .RunIndexToRunDataCache
                     .Values
@@ -75,13 +76,13 @@ namespace Microsoft.Sarif.Viewer.Tags
                     .SelectMany(sarifListItem =>
                         sarifListItem.GetTags<IErrorTag>(this.TextBuffer, this.persistentSpanFactory, includeChildTags: false, includeResultTag: true));
 
-                IEnumerable<ISarifLocationTag> associatedLocationTags = this.sarifErrorListEventSelectionService.SelectedItem != null
+                IEnumerable<ISarifLocationTag> associatedLocationTags = this.ErrorListEventSelectionService.SelectedItem != null
                     ? errorsInCurrentFile
                         .SelectMany(sarifListItem =>
                             sarifListItem.GetTags<IErrorTag>(this.TextBuffer, this.persistentSpanFactory, includeChildTags: true, includeResultTag: false)
                         .Where(sarifLocationTag =>
-                            sarifLocationTag.ResultId == this.sarifErrorListEventSelectionService.SelectedItem.ResultId)) : Enumerable.Empty<ISarifLocationTag>();
-
+                            sarifLocationTag.ResultId == this.ErrorListEventSelectionService.SelectedItem.ResultId)) : Enumerable.Empty<ISarifLocationTag>();
+                
                 IEnumerable<ISarifLocationTag> relevantTags = resultLocationTags.Concat(associatedLocationTags);
 
                 // We need to make sure the list isn't modified underneath us while providing the tags, so executing ToList to get our copy.
@@ -104,6 +105,7 @@ namespace Microsoft.Sarif.Viewer.Tags
                     }
                 }
             }
+            */
         }
 
         /// <inheritdoc/>
@@ -130,7 +132,7 @@ namespace Microsoft.Sarif.Viewer.Tags
 
             if (disposing)
             {
-                this.sarifErrorListEventSelectionService.SelectedItemChanged -= this.SarifErrorListEventSelectionService_SelectedItemChanged;
+                this.ErrorListEventSelectionService.SelectedItemChanged -= this.ErrorListEventSelectionService_SelectedItemChanged;
                 this.Disposed?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -141,7 +143,7 @@ namespace Microsoft.Sarif.Viewer.Tags
             GC.SuppressFinalize(this);
         }
 
-        private void SarifErrorListEventSelectionService_SelectedItemChanged(object sender, SarifErrorListSelectionChangedEventArgs e)
+        private void ErrorListEventSelectionService_SelectedItemChanged(object sender, ErrorListSelectionChangedEventArgs e)
         {
             this.RefreshTags();
         }

@@ -386,6 +386,7 @@ namespace Microsoft.Sarif.Viewer
             {
                 this.resolvedFullFilePath = this.FullFilePath;
             }
+            /*
             else if (!CodeAnalysisResultManager.Instance.TryResolveFilePath(resultId: this.ResultId, runIndex: this.RunIndex, uriBaseId: this.UriBaseId, relativePath: this.FullFilePath, resolvedPath: out this.resolvedFullFilePath))
             {
                 this.regionAndFilePathAreFullyPopulated = false;
@@ -398,7 +399,7 @@ namespace Microsoft.Sarif.Viewer
                 // Fill out the region's properties
                 this.fullyPopulatedRegion = FileRegionsCache.Instance.PopulateTextRegionProperties(this.region, uri, populateSnippet: true);
             }
-
+            */
             this.regionAndFilePathAreFullyPopulated = this.fullyPopulatedRegion != null;
             return this.regionAndFilePathAreFullyPopulated.Value;
         }
@@ -429,7 +430,7 @@ namespace Microsoft.Sarif.Viewer
                 return false;
             }
 
-            return SpanHelper.TryCreatePersistentSpan(this.fullyPopulatedRegion, textBuffer, persistentSpanFactory, out this.persistentSpan);
+            return false; // TODO: Orig code: SpanHelper.TryCreatePersistentSpan(this.fullyPopulatedRegion, textBuffer, persistentSpanFactory, out this.persistentSpan);
         }
 
         protected virtual void Dispose(bool disposing)
