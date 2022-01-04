@@ -25,6 +25,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudio2022", "VisualS
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ApstantaScanner.Vsix.Shared", "ApstantaScanner.Vsix.Shared\ApstantaScanner.Vsix.Shared.shproj", "{585EC2AD-FDD9-49CE-A843-78987847820B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7C177919-A682-45C0-82F7-6EB33B669108}"
+	ProjectSection(SolutionItems) = preProject
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		ApstantaScanner.Vsix.Shared\ApstantaScanner.Vsix.Shared.projitems*{1ba321f8-e4bc-4c67-bc8d-e24cf27be427}*SharedItemsImports = 4

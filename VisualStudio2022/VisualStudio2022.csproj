@@ -45,6 +45,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="MarkdownViewer\Document.cs" />
+    <Compile Include="MarkdownViewer\ExtensionMethods.cs" />
+    <Compile Include="MarkdownViewer\Margin\Browser.cs" />
+    <Compile Include="MarkdownViewer\Margin\BrowserMargin.cs" />
+    <Compile Include="MarkdownViewer\Options\AdvancedOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\MyToolWindowCommand.cs" />
     <Compile Include="Region.cs" />
@@ -118,11 +123,19 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Community.VisualStudio.VSCT" Version="16.0.29.6" PrivateAssets="all" />
-    <PackageReference Include="Community.VisualStudio.Toolkit.17" Version="17.0.330" ExcludeAssets="Runtime" />
+    <PackageReference Include="Community.VisualStudio.Toolkit.17" Version="17.0.369" ExcludeAssets="Runtime">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="DiffPatch">
       <Version>2.0.0</Version>
     </PackageReference>
+    <PackageReference Include="Markdig">
+      <Version>0.26.0</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232" />
+    <PackageReference Include="Unofficial.Microsoft.mshtml">
+      <Version>7.0.3300</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="..\ApstantaScanner.Vsix.Shared\ApstantaScanner.Vsix.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
