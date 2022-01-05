@@ -4,6 +4,7 @@ global using System;
 global using Task = System.Threading.Tasks.Task;
 using System.Runtime.InteropServices;
 using System.Threading;
+using VisualStudio2022.MarkdownViewer.Margin;
 
 namespace VisualStudio2022
 {
@@ -17,7 +18,7 @@ namespace VisualStudio2022
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await this.RegisterCommandsAsync();
-
+            var mb = new MarkdownBrowser();
             this.RegisterToolWindows();
         }
     }

@@ -10,11 +10,11 @@
              xmlns:toolkit="clr-namespace:Community.VisualStudio.Toolkit;assembly=Community.VisualStudio.Toolkit"
              toolkit:Themes.UseVsTheme="True"
              mc:Ignorable="d"
-             d:DesignHeight="300"
-             d:DesignWidth="300"
+             d:DesignHeight="600"
+             d:DesignWidth="600"
              Name="MyToolWindow">
     <Grid>
-        <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical" Name="panelka">
             <Label x:Name="lblHeadline"
                    Margin="10"
                    HorizontalAlignment="Center">Title</Label>
@@ -23,6 +23,17 @@
                     Width="120"
                     Height="80"
                     Name="button1" />
+
+            <WrapPanel Orientation = "Vertical" x:Name="ppp">
+                <TextBlock Text = "Fist Name" Width = "60" Height = "20" Margin = "5" />
+                <TextBox  Width = "200" Height = "20" Margin = "5" />
+                <TextBlock Text = "Last Name" Width = "60" Height = "20" Margin = "5" />
+                <TextBox  Width = "200" Height = "20" Margin = "5"/>
+                <TextBlock Text = "Age" Width = "60" Height = "20" Margin = "5" />
+                <TextBox  Width = "60" Height = "20" Margin = "5" />
+                <TextBlock Text = "Title" Width = "60" Height = "20" Margin = "5" />
+                <TextBox  Width = "200" Height = "20" Margin = "5" />
+            </WrapPanel>
         </StackPanel>
     </Grid>
 </UserControl>

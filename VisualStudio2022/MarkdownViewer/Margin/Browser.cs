@@ -294,16 +294,16 @@ namespace VisualStudio2022.MarkdownViewer.Margin
             string assembly = Assembly.GetExecutingAssembly().Location;
             string assemblyDir = Path.GetDirectoryName(assembly);
 
-            return Path.Combine(assemblyDir, "Margin\\md-template.html");
+            return Path.Combine(assemblyDir, "MarkdownViewer\\Margin\\md-template.html");
         }
 
         private string GetHtmlTemplate()
         {
             string baseHref = Path.GetDirectoryName(_file).Replace("\\", "/");
             string folder = GetFolder();
-            string cssHighlight = File.ReadAllText(Path.Combine(folder, "margin\\highlight.css"));
-            string scriptPrismPath = Path.Combine(folder, "margin\\prism.js");
-            string cssPrism = File.ReadAllText(Path.Combine(folder, "margin\\prism.css"));
+            string cssHighlight = File.ReadAllText(Path.Combine(folder, "MarkdownViewer\\Margin\\highlight.css"));
+            string scriptPrismPath = Path.Combine(folder, "MarkdownViewer\\Margin\\prism.js");
+            string cssPrism = File.ReadAllText(Path.Combine(folder, "MarkdownViewer\\Margin\\prism.css"));
 
             if (AdvancedOptions.Instance.EnableDarkTheme)
             {
@@ -312,8 +312,8 @@ namespace VisualStudio2022.MarkdownViewer.Margin
 
                 if (contrast == ContrastComparisonResult.ContrastHigherWithWhite)
                 {
-                    cssHighlight = File.ReadAllText(Path.Combine(folder, "margin\\highlight-dark.css"));
-                    cssPrism = File.ReadAllText(Path.Combine(folder, "margin\\prism-dark.css"));
+                    cssHighlight = File.ReadAllText(Path.Combine(folder, "MarkdownViewer\\Margin\\highlight-dark.css"));
+                    cssPrism = File.ReadAllText(Path.Combine(folder, "MarkdownViewer\\Margin\\prism-dark.css"));
                 }
             }
 

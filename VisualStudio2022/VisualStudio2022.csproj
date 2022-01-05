@@ -50,6 +50,7 @@
     <Compile Include="MarkdownViewer\Margin\Browser.cs" />
     <Compile Include="MarkdownViewer\Margin\BrowserMargin.cs" />
     <Compile Include="MarkdownViewer\Margin\BrowserMarginProvider.cs" />
+    <Compile Include="MarkdownViewer\Margin\MarkdownBrowser.cs" />
     <Compile Include="MarkdownViewer\Options\AdvancedOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\MyToolWindowCommand.cs" />
