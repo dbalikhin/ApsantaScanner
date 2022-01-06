@@ -6,7 +6,7 @@ using System;
 namespace ApsantaScanner.Vsix.Shared.ErrorList
 {
     /// <summary>
-    /// Used as event arguments for the navigate and selection changed events from <see cref="SarifErrorListEventProcessor"/>.
+    /// Used as event arguments for the navigate and selection changed events from <see cref="ErrorListEventProcessor"/>.
     /// </summary>
     internal class ErrorListSelectionChangedEventArgs : EventArgs
     {

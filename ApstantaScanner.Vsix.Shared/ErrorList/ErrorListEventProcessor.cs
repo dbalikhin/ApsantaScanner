@@ -10,14 +10,15 @@ using System.Linq;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.TableControl;
 using Microsoft.VisualStudio.Shell.TableManager;
+using VisualStudio2022;
 
 namespace ApsantaScanner.Vsix.Shared.ErrorList
 {
     /// <summary>
-    /// Maintains currently selected and navigated to <see cref="SarifErrorListItem"/> from the Visual Studio error list.
+    /// Maintains currently selected and navigated to <see cref="ErrorListItem"/> from the Visual Studio error list.
     /// </summary>
     [Export(typeof(IErrorListEventSelectionService))]
-    internal class SarifErrorListEventProcessor : TableControlEventProcessorBase, IErrorListEventSelectionService
+    internal class ErrorListEventProcessor : TableControlEventProcessorBase, IErrorListEventSelectionService
     {
         private ErrorListItem currentlySelectedItem;
         private ErrorListItem currentlyNavigatedItem;
@@ -68,7 +69,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
         private IWpfTableControl errorListTableControl;
 
         /// <summary>
-        /// Called by <see cref="SarifErrorListEventProcessorProvider"/> to set the table this service will
+        /// Called by <see cref="ErrorListEventProcessorProvider"/> to set the table this service will
         /// handle.
         /// </summary>
         /// <param name="wpfTableControl">The WPF table control representing the error list.</param>
@@ -82,7 +83,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
             ThreadHelper.ThrowIfNotOnUIThread();
 
             base.PostprocessSelectionChanged(e);
-
+            var source = e.SelectionChangedEventArgs.Source;
             if (this.errorListTableControl == null)
             {
                 return;
@@ -125,12 +126,13 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
             ThreadHelper.ThrowIfNotOnUIThread();
 
             base.PreprocessNavigate(entry, e);
-
+            var identity = entry.Identity;
 
             // We need to show the explorer window before navigation so
             // it has time to subscribe to navigation events.
             if (this.TryGetSarifResult(entry, out ErrorListItem aboutToNavigateItem)) ///&&                aboutToNavigateItem?.HasDetails == true)
             {
+                MyToolWindow.ShowAsync().Wait();
                 //SarifExplorerWindow.Find()?.Show();
             }
 
@@ -169,6 +171,18 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
         private bool TryGetSarifResult(ITableEntryHandle entryHandle, out ErrorListItem sarifResult)
         {
             sarifResult = null;
+            //entryHandle.TryGetEntry(out IDiagnosticTableItem tableEntry);
+            var identity = entryHandle.Identity;
+            entryHandle.TryGetValue<object>("detailsexpander", out var details);
+            entryHandle.TryGetValue<object>("text", out var text);
+            entryHandle.TryGetValue<object>("errorsource", out var source);
+            entryHandle.TryGetSnapshot(out var tableEntriesSnapshot, out var index);
+            string key = "line";
+            tableEntriesSnapshot.TryGetValue(0, key, out var content);
+            //if (!code.StartsWith("CA", StringComparison.InvariantCulture))
+            //    return false;
+
+
             /*
             if (entryHandle.TryGetEntry(out ITableEntry tableEntry) &&
                 tableEntry is SarifResultTableEntry sarifResultTableEntry)
@@ -177,6 +191,8 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
                 sarifResult = sarifResultTableEntry.Error;
             }
             */
+
+            //https://github.com/namse/Roslyn-CSX/blob/master/src/VisualStudio/Core/Def/Implementation/TableDataSource/VisualStudioDiagnosticListTable.BuildTableDataSource.cs
             return sarifResult != null;
         }
     }
