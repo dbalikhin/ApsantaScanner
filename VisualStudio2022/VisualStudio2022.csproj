@@ -54,25 +54,6 @@
     <Compile Include="MarkdownViewer\Options\AdvancedOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\MyToolWindowCommand.cs" />
-    <Compile Include="Region.cs" />
-    <Compile Include="ResultTextMarker.cs" />
-    <Compile Include="SdkUiUtilities.cs" />
-    <Compile Include="Tags\ISarifLocationTag.cs" />
-    <Compile Include="Tags\ISarifLocationTagCaretNotify.cs" />
-    <Compile Include="Tags\ISarifLocationTagger.cs" />
-    <Compile Include="Tags\ISarifLocationTaggerService.cs" />
-    <Compile Include="Tags\ITextViewCaretListenerService.cs" />
-    <Compile Include="Tags\SarifLocationErrorTag.cs" />
-    <Compile Include="Tags\SarifLocationErrorTagger.cs" />
-    <Compile Include="Tags\SarifLocationTagBase.cs" />
-    <Compile Include="Tags\SarifLocationTaggerProvider.cs" />
-    <Compile Include="Tags\SarifLocationTaggerService.cs" />
-    <Compile Include="Tags\SarifLocationTagHelpers.cs" />
-    <Compile Include="Tags\SarifLocationTextMarkerTag.cs" />
-    <Compile Include="Tags\SarifLocationTextMarkerTagger.cs" />
-    <Compile Include="Tags\TagInCaretChangedEventArgs.cs" />
-    <Compile Include="Tags\TextViewCaretListener.cs" />
-    <Compile Include="Tags\TextViewCaretListenerService.cs" />
     <Compile Include="VisualStudio2022Package.cs" />
     <Compile Include="source.extension.cs">
       <AutoGen>True</AutoGen>

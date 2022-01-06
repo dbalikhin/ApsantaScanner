@@ -171,16 +171,11 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
         private bool TryGetSarifResult(ITableEntryHandle entryHandle, out ErrorListItem sarifResult)
         {
             sarifResult = null;
-            //entryHandle.TryGetEntry(out IDiagnosticTableItem tableEntry);
-            var identity = entryHandle.Identity;
-            entryHandle.TryGetValue<object>("detailsexpander", out var details);
-            entryHandle.TryGetValue<object>("text", out var text);
-            entryHandle.TryGetValue<object>("errorsource", out var source);
-            entryHandle.TryGetSnapshot(out var tableEntriesSnapshot, out var index);
-            string key = "line";
-            tableEntriesSnapshot.TryGetValue(0, key, out var content);
-            //if (!code.StartsWith("CA", StringComparison.InvariantCulture))
-            //    return false;
+            entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.ErrorCode, out var code);
+
+            if (!code.StartsWith("APS", StringComparison.InvariantCulture) && !code.StartsWith("CS", StringComparison.InvariantCulture);
+                return false;
+
 
 
             /*
