@@ -19,16 +19,26 @@ namespace VisualStudio2022
     [Guid(PackageGuids.VisualStudio2022String)]
     public sealed class VisualStudio2022Package : ToolkitPackage
     {
+        public Microsoft.CodeAnalysis.Solution CurrentSolution { get; private set; }
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
             var workspace = (Workspace)componentModel.GetService<VisualStudioWorkspace>();
+            CurrentSolution = workspace.CurrentSolution;
+
             foreach (var project in workspace.CurrentSolution.Projects)
             {
                 
                 var compilation = await project.GetCompilationAsync();
 
                 var diagnostics = compilation?.GetDiagnostics().Where(d => d.Severity != DiagnosticSeverity.Hidden);
+                if (diagnostics != null)
+                {
+                    foreach (var diagnostic in diagnostics)
+                    {
+                        //diagnostic.Location.GetMappedLineSpan().
+                    }
+                }
                   
                 
             }

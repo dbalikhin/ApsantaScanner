@@ -45,11 +45,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Diagnostics\DiagnosticHasher.cs" />
+    <Compile Include="MarkdownViewer\MDocument.cs" />
     <Compile Include="MarkdownViewer\Document.cs" />
     <Compile Include="MarkdownViewer\ExtensionMethods.cs" />
     <Compile Include="MarkdownViewer\Margin\Browser.cs" />
     <Compile Include="MarkdownViewer\Margin\BrowserMargin.cs" />
     <Compile Include="MarkdownViewer\Margin\BrowserMarginProvider.cs" />
+    <Compile Include="MarkdownViewer\Margin\MarkdownBrowserViewModel.cs" />
     <Compile Include="MarkdownViewer\Margin\MarkdownBrowser.cs" />
     <Compile Include="MarkdownViewer\Options\AdvancedOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -73,12 +76,24 @@
       <Generator>VsixManifestGenerator</Generator>
       <LastGenOutput>source.extension.cs</LastGenOutput>
     </None>
-    <Content Include="MarkdownViewer\Margin\highlight-dark.css" />
-    <Content Include="MarkdownViewer\Margin\highlight.css" />
-    <Content Include="MarkdownViewer\Margin\md-template.html" />
-    <Content Include="MarkdownViewer\Margin\prism-dark.css" />
-    <Content Include="MarkdownViewer\Margin\prism.css" />
-    <Content Include="MarkdownViewer\Margin\prism.js" />
+    <Content Include="MarkdownViewer\Margin\highlight-dark.css">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="MarkdownViewer\Margin\highlight.css">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="MarkdownViewer\Margin\md-template.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="MarkdownViewer\Margin\prism-dark.css">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="MarkdownViewer\Margin\prism.css">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="MarkdownViewer\Margin\prism.js">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\Icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

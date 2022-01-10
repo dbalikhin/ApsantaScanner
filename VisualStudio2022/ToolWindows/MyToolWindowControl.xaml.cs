@@ -9,12 +9,12 @@ namespace VisualStudio2022
 {
     public partial class MyToolWindowControl : UserControl
     {
-        [Import(typeof(MarkdownBrowser))]
-        public MarkdownBrowser MarkdownBrowser { get; set; }
+        private MarkdownBrowser _markdownBrowser;
 
         private string _filename;
-        private Document _document;
+        private MDocument _mdocument;
         private Browser _browser;
+        private Microsoft.CodeAnalysis.Solution _solution;
 
         public MyToolWindowControl()
         {
@@ -22,11 +22,12 @@ namespace VisualStudio2022
             this.Loaded += MyToolWindowControl_Loaded;
         }
 
-        public MyToolWindowControl(string filename, Document doc, Browser browser)
+        public MyToolWindowControl(MarkdownBrowserViewModel mbViewModel)
         {
-            _filename = filename;
-            _document = doc;
-            _browser = browser;
+            _filename = mbViewModel.DocumentFileName;
+            _mdocument = mbViewModel.MDocument;
+            _markdownBrowser = new MarkdownBrowser(mbViewModel);
+            //_solution = solution;
 
             InitializeComponent();
             this.Loaded += MyToolWindowControl_Loaded;
@@ -34,10 +35,7 @@ namespace VisualStudio2022
 
         private void MyToolWindowControl_Loaded(object sender, RoutedEventArgs e)
         {
-            if (MarkdownBrowser != null)
-            {
-                
-            }
+            panelka.Children.Add(_markdownBrowser.Browser._browser);
             //ppp.Children.Add(Browser._browser);
         }
 

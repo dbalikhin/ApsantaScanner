@@ -173,7 +173,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
             sarifResult = null;
             entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.ErrorCode, out var code);
 
-            if (!code.StartsWith("APS", StringComparison.InvariantCulture) && !code.StartsWith("CS", StringComparison.InvariantCulture);
+            if (!code.StartsWith("APS", StringComparison.InvariantCulture) && !code.StartsWith("CS", StringComparison.InvariantCulture));
                 return false;
 
 

@@ -1,15 +1,74 @@
-﻿using System.ComponentModel.Composition;
+﻿using Microsoft.VisualStudio.PlatformUI;
+using System.ComponentModel.Composition;
 
 namespace VisualStudio2022.MarkdownViewer.Margin
 {
-    [Export(typeof(MarkdownBrowser))]
+    
     public class MarkdownBrowser
     {
+        private readonly MDocument _mdocument;
+      
+        private double _lastScrollPosition;
+        private bool _isDisposed;
+        private DateTime _lastEdit;
+
         public Browser Browser { get; private set; }
 
-        public MarkdownBrowser()
+        public MarkdownBrowser(MarkdownBrowserViewModel mbViewModel)
         {
-            Browser = new Browser(null, null);
+            _mdocument = mbViewModel.MDocument;
+            Browser = new Browser(mbViewModel.DocumentFileName, mbViewModel.MDocument);
+
+           
+            UpdateBrowser(_mdocument);
+
+            _mdocument.Parsed += UpdateBrowser;
+         
+
+            //SetResourceReference(BackgroundProperty, VsBrushes.ToolWindowBackgroundKey);
+            //Browser._browser.SetResourceReference(BackgroundProperty, VsBrushes.ToolWindowBackgroundKey);
+            VSColorTheme.ThemeChanged += OnThemeChange;
+        }
+
+        private void OnThemeChange(ThemeChangedEventArgs e)
+        {
+            RefreshAsync().FireAndForget();
+        }
+
+
+
+        public async Task RefreshAsync()
+        {
+            await Browser.RefreshAsync();
+
+            //int line = _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start.Position);
+            //await Browser.UpdatePositionAsync(line, false);
+        }
+
+
+        private void UpdateBrowser(MDocument mdocument)
+        {
+            if (!mdocument.IsParsing)
+            {
+                Browser.UpdateBrowserAsync().FireAndForget();
+            }
+        }
+
+
+        //grid.Children.Add(Browser._browser);
+
+
+
+        public void Dispose()
+        {
+            if (!_isDisposed)
+            {
+                _mdocument.Parsed -= UpdateBrowser; 
+                VSColorTheme.ThemeChanged -= OnThemeChange;
+                Browser?.Dispose();
+            }
+
+            _isDisposed = true;
         }
     }
 }

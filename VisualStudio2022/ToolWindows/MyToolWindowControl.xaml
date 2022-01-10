@@ -24,16 +24,6 @@
                     Height="80"
                     Name="button1" />
 
-            <WrapPanel Orientation = "Vertical" x:Name="ppp">
-                <TextBlock Text = "Fist Name" Width = "60" Height = "20" Margin = "5" />
-                <TextBox  Width = "200" Height = "20" Margin = "5" />
-                <TextBlock Text = "Last Name" Width = "60" Height = "20" Margin = "5" />
-                <TextBox  Width = "200" Height = "20" Margin = "5"/>
-                <TextBlock Text = "Age" Width = "60" Height = "20" Margin = "5" />
-                <TextBox  Width = "60" Height = "20" Margin = "5" />
-                <TextBlock Text = "Title" Width = "60" Height = "20" Margin = "5" />
-                <TextBox  Width = "200" Height = "20" Margin = "5" />
-            </WrapPanel>
         </StackPanel>
     </Grid>
 </UserControl>

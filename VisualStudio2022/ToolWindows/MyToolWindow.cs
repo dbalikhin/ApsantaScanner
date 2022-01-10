@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using VisualStudio2022.MarkdownViewer;
 using VisualStudio2022.MarkdownViewer.Margin;
 
 namespace VisualStudio2022
@@ -19,7 +20,9 @@ namespace VisualStudio2022
 
         public override Task<FrameworkElement> CreateAsync(int toolWindowId, CancellationToken cancellationToken)
         {
-            return Task.FromResult<FrameworkElement>(new MyToolWindowControl(null, null, new Browser(null, null)));
+            var sol = (Package as VisualStudio2022Package).CurrentSolution;
+            var mbViewModel = new MarkdownBrowserViewModel() { MDocument = new MDocument("# Headline 1 \r\n\r\n Normal Text"), DocumentFileName = "fake" };
+            return Task.FromResult<FrameworkElement>(new MyToolWindowControl(mbViewModel));
         }
 
         

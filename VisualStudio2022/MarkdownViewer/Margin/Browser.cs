@@ -20,6 +20,7 @@ namespace VisualStudio2022.MarkdownViewer.Margin
     {
         private readonly string _file;
         private readonly Document _document;
+        private readonly MDocument _mdocument;
         private HTMLDocument _htmlDocument;
         private int _currentViewLine;
         private double _cachedPosition = 0,
@@ -33,6 +34,18 @@ namespace VisualStudio2022.MarkdownViewer.Margin
         {
             _file = file;
             _document = document;
+            _currentViewLine = -1;
+
+            _browser.LoadCompleted += BrowserLoadCompleted;
+            _browser.Navigating += BrowserNavigating;
+
+            _browser.SetResourceReference(Control.BackgroundProperty, VsBrushes.ToolWindowBackgroundKey);
+        }
+
+        public Browser(string file, MDocument mdocument)
+        {
+            _file = file;
+            _mdocument = mdocument;
             _currentViewLine = -1;
 
             _browser.LoadCompleted += BrowserLoadCompleted;
@@ -234,7 +247,7 @@ namespace VisualStudio2022.MarkdownViewer.Margin
                     HtmlRenderer htmlRenderer = new(htmlWriter);
                     Document.Pipeline.Setup(htmlRenderer);
                     htmlRenderer.UseNonAsciiNoEscape = true;
-                    htmlRenderer.Render(_document.Markdown);
+                    htmlRenderer.Render(_mdocument.Markdown);
 
                     htmlWriter.Flush();
                     html = htmlWriter.ToString();
