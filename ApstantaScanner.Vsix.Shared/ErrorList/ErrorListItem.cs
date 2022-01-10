@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using ApstantaScanner.Vsix.Shared.ErrorList;
 using System.ComponentModel;
 
 namespace ApsantaScanner.Vsix.Shared.ErrorList
@@ -16,7 +17,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
 
         private bool isDisposed;
 
-
+        internal DiagnosticItem DiagnosticItem { get; set; }
 
         internal ErrorListItem()
         {

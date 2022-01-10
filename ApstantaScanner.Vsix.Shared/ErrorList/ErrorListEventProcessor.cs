@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-
+using ApstantaScanner.Vsix.Shared.ErrorList;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.TableControl;
 using Microsoft.VisualStudio.Shell.TableManager;
@@ -83,7 +83,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
             ThreadHelper.ThrowIfNotOnUIThread();
 
             base.PostprocessSelectionChanged(e);
-            var source = e.SelectionChangedEventArgs.Source;
+            //var source = e.SelectionChangedEventArgs.Source;
             if (this.errorListTableControl == null)
             {
                 return;
@@ -100,10 +100,10 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
                 itemCount++;
                 ITableEntryHandle current = enumerator.Current;
                 selectedTableEntry ??= current;
-                if (this.TryGetSarifResult(current, out ErrorListItem sarifResult))
+                if (TryGetErrorResult(current, out ErrorListItem errorResult))
                 {
                     selectedErrorListItems ??= new List<ErrorListItem>();
-                    selectedErrorListItems.Add(sarifResult);
+                    selectedErrorListItems.Add(errorResult);
                 }
             }
 
@@ -111,7 +111,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
             ErrorListItem selectedSarifErrorItem = null;
             if (selectedTableEntry != null)
             {
-                this.TryGetSarifResult(selectedTableEntry, out selectedSarifErrorItem);
+                this.TryGetErrorResult(selectedTableEntry, out selectedSarifErrorItem);
             }
 
             ErrorListItem previouslySelectedItem = this.currentlySelectedItem;
@@ -125,12 +125,11 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            base.PreprocessNavigate(entry, e);
-            var identity = entry.Identity;
+            base.PreprocessNavigate(entry, e);            
 
             // We need to show the explorer window before navigation so
             // it has time to subscribe to navigation events.
-            if (this.TryGetSarifResult(entry, out ErrorListItem aboutToNavigateItem)) ///&&                aboutToNavigateItem?.HasDetails == true)
+            if (this.TryGetErrorResult(entry, out ErrorListItem aboutToNavigateItem)) ///&&                aboutToNavigateItem?.HasDetails == true)
             {
                 MyToolWindow.ShowAsync().Wait();
                 //SarifExplorerWindow.Find()?.Show();
@@ -144,7 +143,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
 
             base.PostprocessNavigate(entry, e);
 
-            this.TryGetSarifResult(entry, out ErrorListItem newlyNavigatedErrorItem);
+            this.TryGetErrorResult(entry, out ErrorListItem newlyNavigatedErrorItem);
 
             ErrorListItem previouslyNavigatedItem = this.currentlyNavigatedItem;
             this.currentlyNavigatedItem = newlyNavigatedErrorItem;
@@ -168,27 +167,29 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
             NavigatedItemChanged?.Invoke(this, new ErrorListSelectionChangedEventArgs(previouslyNavigatedItem, this.currentlyNavigatedItem));
         }
 
-        private bool TryGetSarifResult(ITableEntryHandle entryHandle, out ErrorListItem sarifResult)
+        private bool TryGetErrorResult(ITableEntryHandle entryHandle, out ErrorListItem errorListItem)
         {
-            sarifResult = null;
+            errorListItem = null;
             entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.ErrorCode, out var code);
 
-            if (!code.StartsWith("APS", StringComparison.InvariantCulture) && !code.StartsWith("CS", StringComparison.InvariantCulture));
+            // ignore findings from other analyzers (excluding first party analyzers for now)
+            if (!code.StartsWith("APS", StringComparison.InvariantCulture) && !code.StartsWith("CS", StringComparison.InvariantCulture))
+            { 
                 return false;
-
-
-
-            /*
-            if (entryHandle.TryGetEntry(out ITableEntry tableEntry) &&
-                tableEntry is SarifResultTableEntry sarifResultTableEntry)
-            {
-                // Make sure the table entry is one of our table entry types
-                sarifResult = sarifResultTableEntry.Error;
             }
-            */
+
+            entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.Text, out var text);
+            errorListItem = new ErrorListItem()
+            {
+                DiagnosticItem = new DiagnosticItem()
+                {
+                    ErrorCode = code,
+                    ErrorText = text 
+                }
+            };
 
             //https://github.com/namse/Roslyn-CSX/blob/master/src/VisualStudio/Core/Def/Implementation/TableDataSource/VisualStudioDiagnosticListTable.BuildTableDataSource.cs
-            return sarifResult != null;
+            return errorListItem != null;
         }
     }
 }
