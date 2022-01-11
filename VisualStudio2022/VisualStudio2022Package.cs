@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Linq;
 using VisualStudio2022.MarkdownViewer.Margin;
+using Microsoft.VisualStudio;
 
 namespace VisualStudio2022
 {
@@ -16,6 +17,8 @@ namespace VisualStudio2022
     [InstalledProductRegistration(Vsix.Name, Vsix.Description, Vsix.Version)]
     [ProvideToolWindow(typeof(MyToolWindow.Pane), Style = VsDockStyle.Float, Window = WindowGuids.MainWindow)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
+    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string, PackageAutoLoadFlags.BackgroundLoad)]
+    [ProvideToolWindowVisibility(typeof(MyToolWindow.Pane), VSConstants.UICONTEXT.SolutionExistsAndFullyLoaded_string)]
     [Guid(PackageGuids.VisualStudio2022String)]
     public sealed class VisualStudio2022Package : ToolkitPackage
     {
@@ -26,6 +29,7 @@ namespace VisualStudio2022
             var workspace = (Workspace)componentModel.GetService<VisualStudioWorkspace>();
             CurrentSolution = workspace.CurrentSolution;
 
+            /*
             foreach (var project in workspace.CurrentSolution.Projects)
             {
                 
@@ -42,6 +46,7 @@ namespace VisualStudio2022
                   
                 
             }
+            */
             await this.RegisterCommandsAsync();
             
 

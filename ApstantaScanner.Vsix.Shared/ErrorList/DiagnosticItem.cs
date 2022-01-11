@@ -4,5 +4,7 @@
     {
         public string ErrorCode { get; set; }
         public string ErrorText { get; set; }
+
+        public int Line { get; set; }
     }
 }

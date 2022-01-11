@@ -19,7 +19,7 @@ namespace VisualStudio2022.MarkdownViewer.Margin
     public class Browser : IDisposable
     {
         private readonly string _file;
-        private readonly Document _document;
+
         private readonly MDocument _mdocument;
         private HTMLDocument _htmlDocument;
         private int _currentViewLine;
@@ -29,18 +29,6 @@ namespace VisualStudio2022.MarkdownViewer.Margin
 
         [ThreadStatic]
         private static StringWriter _htmlWriterStatic;
-
-        public Browser(string file, Document document)
-        {
-            _file = file;
-            _document = document;
-            _currentViewLine = -1;
-
-            _browser.LoadCompleted += BrowserLoadCompleted;
-            _browser.Navigating += BrowserNavigating;
-
-            _browser.SetResourceReference(Control.BackgroundProperty, VsBrushes.ToolWindowBackgroundKey);
-        }
 
         public Browser(string file, MDocument mdocument)
         {
@@ -52,6 +40,7 @@ namespace VisualStudio2022.MarkdownViewer.Margin
             _browser.Navigating += BrowserNavigating;
 
             _browser.SetResourceReference(Control.BackgroundProperty, VsBrushes.ToolWindowBackgroundKey);
+            
         }
 
         public readonly WebBrowser _browser = new() { HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0), Visibility = Visibility.Hidden };
@@ -169,70 +158,13 @@ namespace VisualStudio2022.MarkdownViewer.Margin
             }
         }
 
-        public Task UpdatePositionAsync(int line, bool isTyping)
-        {
-            if (_currentViewLine == line)
-            {
-                return Task.CompletedTask;
-            }
-
-            return ThreadHelper.JoinableTaskFactory.StartOnIdle(() =>
-            {
-                _currentViewLine = _document.Markdown.FindClosestLine(line);
-                SyncNavigation(isTyping);
-            }, VsTaskRunContext.UIThreadIdlePriority).Task;
-        }
-
-        private void SyncNavigation(bool isTyping)
-        {
-            if (_htmlDocument != null)
-            {
-                if (_currentViewLine == 0)
-                {
-                    // Forces the preview window to scroll to the top of the document
-                    _htmlDocument.documentElement.setAttribute("scrollTop", 0);
-                }
-                else
-                {
-                    IHTMLElement element = _htmlDocument.getElementById("pragma-line-" + _currentViewLine);
-                    if (element != null)
-                    {
-                        // When typing, scroll the edited element into view a bit under the top...
-                        if (isTyping)
-                        {
-                            IHTMLElement2 docElm = (IHTMLElement2)_htmlDocument.documentElement;
-                            int scrollPos = docElm.scrollTop;
-                            int windowHeight = docElm.clientHeight;
-
-                            // ...but only if it isn't already visible on screen
-                            if (element.offsetTop < scrollPos || element.offsetTop > scrollPos + windowHeight)
-                            {
-                                docElm.scrollTop = element.offsetTop - 200;
-                            }
-                        }
-                        else
-                        {
-                            element.scrollIntoView(true);
-                        }
-                    }
-                }
-            }
-            else if (_htmlDocument != null)
-            {
-                _currentViewLine = -1;
-                _cachedPosition = (double)_htmlDocument.documentElement.getAttribute("scrollTop"); // TODO: missing cast added correctly?
-                _cachedHeight = Math.Max(1.0, _htmlDocument.body.offsetHeight);
-                _positionPercentage = _cachedPosition * 100 / _cachedHeight;
-            }
-        }
-
         public Task RefreshAsync()
         {
             _htmlDocument = null;
-            return UpdateBrowserAsync();
+            return UpdateBrowserAsync(_mdocument);
         }
 
-        public Task UpdateBrowserAsync()
+        public Task UpdateBrowserAsync(MDocument mdoc)
         {
             return ThreadHelper.JoinableTaskFactory.StartOnIdle(() =>
             {
@@ -245,9 +177,9 @@ namespace VisualStudio2022.MarkdownViewer.Margin
                     htmlWriter.GetStringBuilder().Clear();
 
                     HtmlRenderer htmlRenderer = new(htmlWriter);
-                    Document.Pipeline.Setup(htmlRenderer);
+                    MDocument.Pipeline.Setup(htmlRenderer);
                     htmlRenderer.UseNonAsciiNoEscape = true;
-                    htmlRenderer.Render(_mdocument.Markdown);
+                    htmlRenderer.Render(mdoc.Markdown);
 
                     htmlWriter.Flush();
                     html = htmlWriter.ToString();

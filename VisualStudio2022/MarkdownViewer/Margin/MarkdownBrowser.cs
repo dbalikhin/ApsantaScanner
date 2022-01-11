@@ -8,9 +8,7 @@ namespace VisualStudio2022.MarkdownViewer.Margin
     {
         private readonly MDocument _mdocument;
       
-        private double _lastScrollPosition;
         private bool _isDisposed;
-        private DateTime _lastEdit;
 
         public Browser Browser { get; private set; }
 
@@ -40,9 +38,6 @@ namespace VisualStudio2022.MarkdownViewer.Margin
         public async Task RefreshAsync()
         {
             await Browser.RefreshAsync();
-
-            //int line = _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start.Position);
-            //await Browser.UpdatePositionAsync(line, false);
         }
 
 
@@ -50,14 +45,9 @@ namespace VisualStudio2022.MarkdownViewer.Margin
         {
             if (!mdocument.IsParsing)
             {
-                Browser.UpdateBrowserAsync().FireAndForget();
+                Browser.UpdateBrowserAsync(mdocument).FireAndForget();
             }
         }
-
-
-        //grid.Children.Add(Browser._browser);
-
-
 
         public void Dispose()
         {

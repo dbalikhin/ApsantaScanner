@@ -131,7 +131,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
             // it has time to subscribe to navigation events.
             if (this.TryGetErrorResult(entry, out ErrorListItem aboutToNavigateItem)) ///&&                aboutToNavigateItem?.HasDetails == true)
             {
-                MyToolWindow.ShowAsync().Wait();
+                //MyToolWindow.ShowAsync().Wait();
                 //SarifExplorerWindow.Find()?.Show();
             }
 
@@ -173,18 +173,20 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
             entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.ErrorCode, out var code);
 
             // ignore findings from other analyzers (excluding first party analyzers for now)
-            if (!code.StartsWith("APS", StringComparison.InvariantCulture) && !code.StartsWith("CS", StringComparison.InvariantCulture))
+            if (!code.StartsWith("APS", StringComparison.InvariantCulture) && !code.StartsWith("CS", StringComparison.InvariantCulture) && !code.StartsWith("CA", StringComparison.InvariantCulture))
             { 
                 return false;
             }
 
             entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.Text, out var text);
+            entryHandle.TryGetValue<int>(StandardTableColumnDefinitions.Line, out var line);
             errorListItem = new ErrorListItem()
             {
                 DiagnosticItem = new DiagnosticItem()
                 {
                     ErrorCode = code,
-                    ErrorText = text 
+                    ErrorText = text,
+                    Line = line,
                 }
             };
 

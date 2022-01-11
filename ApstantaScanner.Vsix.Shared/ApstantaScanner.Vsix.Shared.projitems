@@ -9,6 +9,7 @@
     <Import_RootNamespace>ApstantaScanner.Vsix.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ErrorList\DiagnosticItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorList\ErrorListItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorList\ErrorListSelectionChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorList\IErrorListEventSelectionService.cs" />

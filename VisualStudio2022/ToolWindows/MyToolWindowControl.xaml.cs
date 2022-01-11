@@ -9,7 +9,8 @@ namespace VisualStudio2022
 {
     public partial class MyToolWindowControl : UserControl
     {
-        private MarkdownBrowser _markdownBrowser;
+        public MarkdownBrowserViewModel MarkdownBrowserViewModel { get; set; }
+        MarkdownBrowser _markdownBrowser;
 
         private string _filename;
         private MDocument _mdocument;
@@ -33,9 +34,18 @@ namespace VisualStudio2022
             this.Loaded += MyToolWindowControl_Loaded;
         }
 
+        public void UpdateBrowser(string text)
+        {
+            var mdoc = new MDocument(text);
+            _markdownBrowser.Browser.UpdateBrowserAsync(mdoc).FireAndForget();
+        }
+
         private void MyToolWindowControl_Loaded(object sender, RoutedEventArgs e)
         {
-            panelka.Children.Add(_markdownBrowser.Browser._browser);
+            if (!panelka.Children.Contains(_markdownBrowser.Browser._browser))
+            {
+                panelka.Children.Add(_markdownBrowser.Browser._browser);
+            }            
             //ppp.Children.Add(Browser._browser);
         }
 
