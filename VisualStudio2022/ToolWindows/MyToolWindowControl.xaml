@@ -10,20 +10,39 @@
              xmlns:toolkit="clr-namespace:Community.VisualStudio.Toolkit;assembly=Community.VisualStudio.Toolkit"
              toolkit:Themes.UseVsTheme="True"
              mc:Ignorable="d"
-             d:DesignHeight="600"
-             d:DesignWidth="600"
+             d:DesignHeight="800"
+             d:DesignWidth="800"
+             Height="auto"
+             Width="auto"
              Name="MyToolWindow">
     <Grid>
-        <StackPanel Orientation="Vertical" Name="panelka">
-            <Label x:Name="lblHeadline"
-                   Margin="10"
-                   HorizontalAlignment="Center">Title</Label>
-            <Button Content="Click me!"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <StackPanel Orientation="Horizontal"  Margin="10">
+
+                <Button Content="In Test"
                     Click="button1_Click"
                     Width="120"
-                    Height="80"
-                    Name="button1" />
+                    Height="40"
+                    Name="button1"
+                    Margin="15,0,15,0" />
+                
+                <Button Content="False Positive"
+                    Click="button1_Click"
+                    Width="120"
+                    Height="40"
+                    Name="button2"
+                    Margin="15,0,15,0" />
 
-        </StackPanel>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" x:Name="BrowserRow">
+
+        </Grid>
+
     </Grid>
+    
 </UserControl>

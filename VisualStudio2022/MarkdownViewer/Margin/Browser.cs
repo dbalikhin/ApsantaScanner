@@ -20,12 +20,8 @@ namespace VisualStudio2022.MarkdownViewer.Margin
     {
         private readonly string _file;
 
-        private readonly MDocument _mdocument;
+        private MDocument _currentmDoc;
         private HTMLDocument _htmlDocument;
-        private int _currentViewLine;
-        private double _cachedPosition = 0,
-                       _cachedHeight = 0,
-                       _positionPercentage = 0;
 
         [ThreadStatic]
         private static StringWriter _htmlWriterStatic;
@@ -33,8 +29,8 @@ namespace VisualStudio2022.MarkdownViewer.Margin
         public Browser(string file, MDocument mdocument)
         {
             _file = file;
-            _mdocument = mdocument;
-            _currentViewLine = -1;
+            _currentmDoc = mdocument;
+         
 
             _browser.LoadCompleted += BrowserLoadCompleted;
             _browser.Navigating += BrowserNavigating;
@@ -43,7 +39,7 @@ namespace VisualStudio2022.MarkdownViewer.Margin
             
         }
 
-        public readonly WebBrowser _browser = new() { HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0), Visibility = Visibility.Hidden };
+        public readonly WebBrowser _browser = new() { HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch, Margin = new Thickness(0), Visibility = Visibility.Hidden };
 
         private void BrowserNavigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
@@ -98,8 +94,8 @@ namespace VisualStudio2022.MarkdownViewer.Margin
             _browser.Visibility = Visibility.Visible;
             _htmlDocument = (HTMLDocument)_browser.Document;
 
-            _cachedHeight = _htmlDocument.body.offsetHeight;
-            _htmlDocument.documentElement.setAttribute("scrollTop", _positionPercentage * _cachedHeight / 100);
+            //_cachedHeight = _htmlDocument.body.offsetHeight;
+            //_htmlDocument.documentElement.setAttribute("scrollTop", _positionPercentage * _cachedHeight / 100);
 
             AdjustAnchors();
         }
@@ -161,13 +157,14 @@ namespace VisualStudio2022.MarkdownViewer.Margin
         public Task RefreshAsync()
         {
             _htmlDocument = null;
-            return UpdateBrowserAsync(_mdocument);
+            return UpdateBrowserAsync(_currentmDoc);
         }
 
         public Task UpdateBrowserAsync(MDocument mdoc)
         {
             return ThreadHelper.JoinableTaskFactory.StartOnIdle(() =>
             {
+                _currentmDoc = mdoc;
                 // Generate the HTML document
                 string html = null;
                 StringWriter htmlWriter = null;

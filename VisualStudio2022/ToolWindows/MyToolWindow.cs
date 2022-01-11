@@ -16,8 +16,6 @@ namespace VisualStudio2022
 {
     public class MyToolWindow : BaseToolWindow<MyToolWindow>
     {
-        private readonly IErrorListEventSelectionService errorListEventSelectionService;
-
         public override string GetTitle(int toolWindowId) => "My Tool Window";
 
         public override Type PaneType => typeof(Pane);
@@ -27,7 +25,7 @@ namespace VisualStudio2022
             
             var sol = (Package as VisualStudio2022Package).CurrentSolution;
             
-            var mbViewModel = new MarkdownBrowserViewModel() { MDocument = new MDocument("# Headline 1 \r\n\r\n Normal Text"), DocumentFileName = "fake" };
+            var mbViewModel = new MarkdownBrowserViewModel() { MDocument = new MDocument(""), DocumentFileName = "fake" };
             return Task.FromResult<FrameworkElement>(new MyToolWindowControl(mbViewModel));
         }
 
@@ -38,7 +36,7 @@ namespace VisualStudio2022
         [Guid("448df334-be26-4c43-95c9-289e20530261")]
         internal class Pane : ToolWindowPane
         {
-            private IErrorListEventSelectionService _errorListEventSelectionService;
+            private readonly IErrorListEventSelectionService _errorListEventSelectionService;
             public Pane()
             {
                 BitmapImageMoniker = KnownMonikers.ToolWindow;
@@ -48,12 +46,12 @@ namespace VisualStudio2022
                 {
                     _errorListEventSelectionService = componentModel.GetService<IErrorListEventSelectionService>();
                     
-                    _errorListEventSelectionService.NavigatedItemChanged += _errorListEventSelectionService_NavigatedItemChanged;
+                    _errorListEventSelectionService.NavigatedItemChanged += errorListEventSelectionService_NavigatedItemChanged;
                 }
                 
             }
 
-            private void _errorListEventSelectionService_NavigatedItemChanged(object sender, ErrorListSelectionChangedEventArgs e)
+            private void errorListEventSelectionService_NavigatedItemChanged(object sender, ErrorListSelectionChangedEventArgs e)
             {
                 if (sender is ErrorListEventProcessor)
                 {
@@ -65,9 +63,7 @@ namespace VisualStudio2022
                         (Content as MyToolWindowControl).UpdateBrowser(report);
                     }
                     
-                }
-
-                //(Content as MyToolWindowControl).Refresh();
+                }               
                 
             }
 
@@ -77,9 +73,18 @@ namespace VisualStudio2022
                 sb.AppendLine("## SQL Injection")
                   .AppendLine("")
                   .AppendLine("ErrorText: " + diag.ErrorText)
+                  .AppendLine("")
                   .AppendLine("ErrorCode: " + diag.ErrorCode)
-                  .AppendLine("Line: " + diag.Line.ToString()
-                );
+                  .AppendLine("")
+                  .AppendLine("Line: " + diag.Line.ToString())
+                  .AppendLine("")
+                  .AppendLine("```csharp")
+                  .AppendLine("")
+                  .AppendLine("public void Do(int i)")
+                  .AppendLine("")
+                  .AppendLine("```")
+                  .AppendLine("");
+
                 return sb.ToString();
             }
         }

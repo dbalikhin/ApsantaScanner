@@ -42,10 +42,12 @@ namespace VisualStudio2022
 
         private void MyToolWindowControl_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!panelka.Children.Contains(_markdownBrowser.Browser._browser))
+            //mBrowser = _markdownBrowser.Browser._browser;
+            
+            if (!BrowserRow.Children.Contains(_markdownBrowser.Browser._browser))
             {
-                panelka.Children.Add(_markdownBrowser.Browser._browser);
-            }            
+                BrowserRow.Children.Add(_markdownBrowser.Browser._browser);
+            }
             //ppp.Children.Add(Browser._browser);
         }
 
