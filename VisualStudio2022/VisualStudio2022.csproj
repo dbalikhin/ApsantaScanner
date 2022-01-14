@@ -45,6 +45,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Auth\AuthService.cs" />
+    <Compile Include="Auth\DeviceAuthorizationResponse.cs" />
+    <Compile Include="Auth\TokenResponse.cs" />
     <Compile Include="Diagnostics\DiagnosticHasher.cs" />
     <Compile Include="MarkdownViewer\MDocument.cs" />
     <Compile Include="MarkdownViewer\Document.cs" />
@@ -141,6 +144,9 @@
       <Version>4.0.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232" />
+    <PackageReference Include="System.Text.Json">
+      <Version>6.0.1</Version>
+    </PackageReference>
     <PackageReference Include="Unofficial.Microsoft.mshtml">
       <Version>7.0.3300</Version>
     </PackageReference>

@@ -15,34 +15,46 @@
              Height="auto"
              Width="auto"
              Name="MyToolWindow">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="70" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <StackPanel Orientation="Horizontal"  Margin="10">
+   
+    <TabControl>
+        <TabItem Header="TabItem">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <StackPanel Orientation="Horizontal"  Margin="10">
 
-                <Button Content="In Test"
+                        <Button Content="In Test"
                     Click="button1_Click"
                     Width="120"
                     Height="40"
                     Name="button1"
                     Margin="15,0,15,0" />
-                
-                <Button Content="False Positive"
+
+                        <Button Content="False Positive"
                     Click="button1_Click"
                     Width="120"
                     Height="40"
                     Name="button2"
                     Margin="15,0,15,0" />
 
-            </StackPanel>
-        </Grid>
-        <Grid Grid.Row="1" x:Name="BrowserRow">
+                    </StackPanel>
 
-        </Grid>
 
-    </Grid>
-    
+
+
+                </Grid>
+                <Grid Grid.Row="1" x:Name="BrowserRow">
+
+                </Grid>
+
+            </Grid>
+        </TabItem>
+        <TabItem Header="Settings" x:Name="TabSettings">
+            <Grid Background="#FFE5E5E5"/>
+        </TabItem>
+    </TabControl>
+
 </UserControl>
