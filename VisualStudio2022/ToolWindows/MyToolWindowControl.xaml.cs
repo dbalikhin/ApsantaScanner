@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows;
 using System.Windows.Controls;
+using VisualStudio2022.Auth;
 using VisualStudio2022.MarkdownViewer;
 using VisualStudio2022.MarkdownViewer.Margin;
 using VisualStudio2022.MarkdownViewer.Options;
@@ -53,7 +54,8 @@ namespace VisualStudio2022
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-
+            //AuthService.Main.
+            
             VS.MessageBox.Show("VisualStudio2022", "Button clicked");
             
         }

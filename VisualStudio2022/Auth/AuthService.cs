@@ -13,7 +13,7 @@ namespace VisualStudio2022.Auth
 
         //{"access_token":"...","token_type":"bearer","scope":""}
 
-        public static async Task Main( )
+        public static async Task Main()
         {
             Console.WriteLine("Hello World!");
             using var client = new HttpClient();
