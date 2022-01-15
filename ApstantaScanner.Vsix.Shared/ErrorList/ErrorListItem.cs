@@ -8,10 +8,6 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
 {
     internal class ErrorListItem : NotifyPropertyChangedObject, IDisposable
     {
-        /// <summary>
-        /// Contains the result Id that will be incremented and assigned to new instances of <see cref="SarifErrorListItem"/>.
-        /// </summary>
-        private static int currentResultId;
 
         private string _selectedTab;
 

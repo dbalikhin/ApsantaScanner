@@ -1,5 +1,6 @@
 ﻿using GitHub.Authentication.CredentialManagement;
 using System.ComponentModel.Composition;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using VisualStudio2022.Auth;
@@ -63,6 +64,20 @@ namespace VisualStudio2022
             
         }
 
-        
+  
+        private async void btnAuth_Click(object sender, RoutedEventArgs e)
+        {
+            using var client = new HttpClient();
+            
+            var authorizationResponse = await AuthService.StartDeviceFlowAsync(client);
+            lAuthCode.Content = authorizationResponse.DeviceCode;
+            AuthService.OpenWebPage(authorizationResponse.VerificationUri);
+            var tokenResponse = await AuthService.GetTokenAsync(client, authorizationResponse);
+
+            
+            
+        }
+
+     
     }
 }

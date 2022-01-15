@@ -7,31 +7,13 @@ using System.Threading.Tasks;
 namespace VisualStudio2022.Auth
 {
     public class AuthService
-    {
-        private const string TenantId = "<your tenant id>";
+    {      
         private const string ClientId = "Iv1.c51720e62268aece";
 
         //{"access_token":"...","token_type":"bearer","scope":""}
 
-        public static async Task Main()
-        {
-            Console.WriteLine("Hello World!");
-            using var client = new HttpClient();
-            var authorizationResponse = await StartDeviceFlowAsync(client);
-            Console.WriteLine("Please visit this URL: " + authorizationResponse.VerificationUri);
-            Console.WriteLine("And enter the following code: " + authorizationResponse.UserCode);
-            OpenWebPage(authorizationResponse.VerificationUri);
-            var tokenResponse = await GetTokenAsync(client, authorizationResponse);
-            Console.WriteLine("Access token: ");
-            Console.WriteLine(tokenResponse.AccessToken);
-            Console.WriteLine("ID token: ");
-            Console.WriteLine(tokenResponse.IdToken);
-            Console.WriteLine("Refresh token: ");
-            Console.WriteLine(tokenResponse.RefreshToken);
-            Console.ReadLine();
-        }
 
-        private static void OpenWebPage(string url)
+        public static void OpenWebPage(string url)
         {
             var psi = new ProcessStartInfo(url)
             {
@@ -40,9 +22,9 @@ namespace VisualStudio2022.Auth
             Process.Start(psi);
         }
 
-        private static async Task<DeviceAuthorizationResponse> StartDeviceFlowAsync(HttpClient client)
+        public static async Task<DeviceAuthorizationResponse> StartDeviceFlowAsync(HttpClient client)
         {
-            string deviceEndpointAAD = $"https://login.microsoftonline.com/{TenantId}/oauth2/v2.0/devicecode";
+       
             string deviceEndpoint = $"https://github.com/login/device/code";
             var request = new HttpRequestMessage(HttpMethod.Post, deviceEndpoint)
             {
@@ -61,10 +43,8 @@ namespace VisualStudio2022.Auth
             return json;
         }
 
-        private static async Task<TokenResponse> GetTokenAsync(HttpClient client,
-            DeviceAuthorizationResponse authResponse)
-        {
-            string tokenEndpointAAD = $"https://login.microsoftonline.com/{TenantId}/oauth2/v2.0/token";
+        public static async Task<TokenResponse> GetTokenAsync(HttpClient client, DeviceAuthorizationResponse authResponse)
+        {            
             string tokenEndpoint = "https://github.com/login/oauth/access_token";
 
             // Poll until we get a valid token response or a fatal error
