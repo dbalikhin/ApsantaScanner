@@ -151,6 +151,12 @@
       <Version>7.0.3300</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\src\CredentialManagement\CredentialManagement.csproj">
+      <Project>{fa07d02d-8e7c-4876-99fa-571c1256ef94}</Project>
+      <Name>CredentialManagement</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\ApstantaScanner.Vsix.Shared\ApstantaScanner.Vsix.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />

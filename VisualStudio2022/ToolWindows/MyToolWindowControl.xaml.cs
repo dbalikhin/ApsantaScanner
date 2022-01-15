@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using GitHub.Authentication.CredentialManagement;
+using System.ComponentModel.Composition;
 using System.Windows;
 using System.Windows.Controls;
 using VisualStudio2022.Auth;
@@ -56,6 +57,8 @@ namespace VisualStudio2022
         {
             //AuthService.Main.
             
+            //Credential.
+
             VS.MessageBox.Show("VisualStudio2022", "Button clicked");
             
         }
