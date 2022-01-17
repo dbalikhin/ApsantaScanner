@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace VisualStudio2022.Auth
@@ -38,7 +38,8 @@ namespace VisualStudio2022.Auth
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var daResponseString = await response.Content.ReadAsStringAsync();
-            var json = JsonSerializer.Deserialize<DeviceAuthorizationResponse>(daResponseString);
+            //var json = JsonSerializer.Deserialize<DeviceAuthorizationResponse>(daResponseString);
+            var json = JsonConvert.DeserializeObject<DeviceAuthorizationResponse>(daResponseString);
 
             return json;
         }
@@ -65,7 +66,9 @@ namespace VisualStudio2022.Auth
                 var json = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode)
                 {
-                    var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(json);
+                    // Text.JSON
+                    // var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(json);
+                    var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(json);
                     if (tokenResponse?.Error == null)
                     {
                         return tokenResponse;
