@@ -1,5 +1,6 @@
 ﻿using EnvDTE;
 using GitHub.Authentication.CredentialManagement;
+using Microsoft.VisualStudio.Shell.Interop;
 using System.ComponentModel.Composition;
 using System.Net.Http;
 using System.Windows;
@@ -76,18 +77,9 @@ namespace VisualStudio2022
             
             var authorizationResponse = await AuthService.StartDeviceFlowAsync(client);
             lAuthCode.Content = authorizationResponse.DeviceCode;
-            //AuthService.OpenWebPage(authorizationResponse.VerificationUri);
-            var browser = _serviceProvider.GetService(typeof(SVsWebBrowsingService)) as IVsWebBrowsingService;
-            if (browser == null)
-            {
-                Debug.Fail("Failed to get SVsWebBrowsingService service.");
-                return VSConstants.E_UNEXPECTED;
-            }
+            AuthService.OpenWebPage(authorizationResponse.VerificationUri);
 
-            IVsWindowFrame frame = null;
 
-            int hr = browser.Navigate(authorizationResponse.VerificationUri, );
-            //itemOps.Navigate(authorizationResponse.VerificationUri);
             var tokenResponse = await AuthService.GetTokenAsync(client, authorizationResponse);
 
             

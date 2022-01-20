@@ -20,18 +20,22 @@ namespace VisualStudio2022
 
         public override Type PaneType => typeof(Pane);
 
+        public VisualStudio2022Package ApsantaPackage => Package as VisualStudio2022Package;
+
         public override Task<FrameworkElement> CreateAsync(int toolWindowId, CancellationToken cancellationToken)
         {
             
-            var sol = (Package as VisualStudio2022Package).CurrentSolution;
+            var sol = ApsantaPackage.CurrentSolution;
+            ApsantaPackage.AuthServiceInstance.GithubAuthUserTokenRecieved += AuthServiceInstance_GithubAuthUserTokenRecieved;
             
             var mbViewModel = new MarkdownBrowserViewModel() { MDocument = new MDocument(""), DocumentFileName = "fake" };
             return Task.FromResult<FrameworkElement>(new MyToolWindowControl(mbViewModel));
         }
 
-        
-
-        
+        private void AuthServiceInstance_GithubAuthUserTokenRecieved(object sender, Auth.GithubAuthUserTokenReceivedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         [Guid("448df334-be26-4c43-95c9-289e20530261")]
         internal class Pane : ToolWindowPane

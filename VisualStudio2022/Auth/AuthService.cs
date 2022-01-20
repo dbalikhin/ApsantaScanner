@@ -12,19 +12,75 @@ namespace VisualStudio2022.Auth
 
         //{"access_token":"...","token_type":"bearer","scope":""}
 
+        private AuthStatus currentAuthStatus = AuthStatus.NotStarted;
+        private AuthStatus previousAuthStatus = AuthStatus.NotStarted;
+
+        private string userCode = "";
+        private string userToken = "";
+
+        public AuthStatus AuthStatus
+        {
+            get => currentAuthStatus;
+            set
+            {
+                if (currentAuthStatus != value)
+                {
+                    previousAuthStatus = currentAuthStatus;
+                    currentAuthStatus = value;
+
+                    GithubAuthStatusChanged?.Invoke(this, new GithubAuthStatusChangedEventArgs(previousAuthStatus, currentAuthStatus));
+                }
+            }
+        }
+      
+        public string UserCode
+        {
+            get => userCode;
+            set
+            {
+                userCode = value;
+                GithubAuthDeviceCodeRecieved?.Invoke(this, new GithubAuthDeviceCodeReceivedEventArgs(userCode));
+                
+            }
+        }
+        public string UserToken
+        {
+            get => userToken;
+            set
+            {
+                userToken = value;
+                GithubAuthUserTokenRecieved?.Invoke(this, new GithubAuthUserTokenReceivedEventArgs(userToken));
+
+            }
+        }
+
+        public event EventHandler<GithubAuthStatusChangedEventArgs> GithubAuthStatusChanged;
+        public event EventHandler<GithubAuthDeviceCodeReceivedEventArgs> GithubAuthDeviceCodeRecieved;
+        public event EventHandler<GithubAuthUserTokenReceivedEventArgs> GithubAuthUserTokenRecieved;
+
+        public async Task InitiateDeviceFlowAsync()
+        {
+            currentAuthStatus = AuthStatus.NotStarted;
+            previousAuthStatus = AuthStatus.NotStarted;
+            userToken = "";
+            userCode = "";
+
+            HttpClient client = new();
+            var authCodeResponse = await StartDeviceFlowAsync(client);
+            OpenWebPage(authCodeResponse.VerificationUri);
+            var authTokenResponse = await GetTokenAsync(client, authCodeResponse);
+        }
 
         public static void OpenWebPage(string url)
         {
-            var psi = new ProcessStartInfo(url)
-            {
-                UseShellExecute = true
-            };
+            // validate url
+            var psi = new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true };  
+
             Process.Start(psi);
         }
 
-        public static async Task<DeviceAuthorizationResponse> StartDeviceFlowAsync(HttpClient client)
-        {
-       
+        public async Task<DeviceAuthorizationResponse> StartDeviceFlowAsync(HttpClient client)
+        {            
             string deviceEndpoint = $"https://github.com/login/device/code";
             var request = new HttpRequestMessage(HttpMethod.Post, deviceEndpoint)
             {
@@ -40,11 +96,12 @@ namespace VisualStudio2022.Auth
             var daResponseString = await response.Content.ReadAsStringAsync();
             //var json = JsonSerializer.Deserialize<DeviceAuthorizationResponse>(daResponseString);
             var json = JsonConvert.DeserializeObject<DeviceAuthorizationResponse>(daResponseString);
-
+            AuthStatus = AuthStatus.DeviceCodeReceived;
+            UserCode = json.UserCode;
             return json;
         }
 
-        public static async Task<TokenResponse> GetTokenAsync(HttpClient client, DeviceAuthorizationResponse authResponse)
+        public async Task<TokenResponse> GetTokenAsync(HttpClient client, DeviceAuthorizationResponse authResponse)
         {            
             string tokenEndpoint = "https://github.com/login/oauth/access_token";
 
@@ -71,6 +128,8 @@ namespace VisualStudio2022.Auth
                     var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(json);
                     if (tokenResponse?.Error == null)
                     {
+                        AuthStatus = AuthStatus.TokenReceived;
+                        UserToken = tokenResponse.AccessToken;
                         return tokenResponse;
                     }
 
@@ -85,6 +144,7 @@ namespace VisualStudio2022.Auth
                             break;
                         default:
                             // Some other error, nothing we can do but throw
+                            AuthStatus = AuthStatus.Error;
                             throw new Exception(
                                 $"Authorization failed: {tokenResponse.Error} - {tokenResponse.ErrorDescription}");
                     }
@@ -93,5 +153,13 @@ namespace VisualStudio2022.Auth
                 }
             }
         }
+    }
+
+    public enum AuthStatus
+    {
+        NotStarted = 0,
+        DeviceCodeReceived,
+        TokenReceived,
+        Error
     }
 }

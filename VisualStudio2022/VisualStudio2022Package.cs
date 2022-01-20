@@ -10,6 +10,7 @@ using System.Threading;
 using System.Linq;
 using VisualStudio2022.MarkdownViewer.Margin;
 using Microsoft.VisualStudio;
+using VisualStudio2022.Auth;
 
 namespace VisualStudio2022
 {
@@ -28,6 +29,8 @@ namespace VisualStudio2022
             var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
             var workspace = (Workspace)componentModel.GetService<VisualStudioWorkspace>();
             CurrentSolution = workspace.CurrentSolution;
+
+            AuthServiceInstance = new AuthService();
 
             /*
             foreach (var project in workspace.CurrentSolution.Projects)
@@ -53,5 +56,7 @@ namespace VisualStudio2022
 
             this.RegisterToolWindows();
         }
+
+        public AuthService AuthServiceInstance { get; private set; }
     }
 }
