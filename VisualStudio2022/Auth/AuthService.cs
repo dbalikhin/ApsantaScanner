@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GitHub.Authentication.CredentialManagement;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
@@ -12,7 +13,9 @@ namespace VisualStudio2022.Auth
     }
 
     public class AuthService : IAuthService
-    {      
+    {
+        private const string CredStorageKey = "apsanta_user_key";
+        private const string CredStorageUser = "apsanta_user";
         private const string ClientId = "Iv1.c51720e62268aece";
 
         //{"access_token":"...","token_type":"bearer","scope":""}
@@ -22,7 +25,7 @@ namespace VisualStudio2022.Auth
 
         private string userCode = "";
         private string userToken = "";
-
+        
         public AuthStatus AuthStatus
         {
             get => currentAuthStatus;
@@ -44,6 +47,19 @@ namespace VisualStudio2022.Auth
         public event EventHandler<GithubAuthStatusChangedEventArgs> GithubAuthStatusChanged;
 
 
+        public AuthService()
+        {
+            LoadSavedCredentials();
+        }
+
+        public void LoadSavedCredentials()
+        {
+            var credential = Credential.Load(CredStorageKey);
+            if (credential == null)
+                userToken = credential.Password;
+        }
+
+
         public async Task InitiateDeviceFlowAsync()
         {
             currentAuthStatus = AuthStatus.NotStarted;
@@ -61,9 +77,23 @@ namespace VisualStudio2022.Auth
                     OpenWebPage(authCodeResponse.VerificationUri);
 
                     var authTokenResponse = await GetTokenAsync(client, authCodeResponse);
+
+                    if (string.IsNullOrWhiteSpace(authTokenResponse.Error))
+                    {
+                        SaveCredentials(authTokenResponse);
+
+                    }
                 }
                 
             } 
+        }
+
+        public void SaveCredentials(TokenResponse authTokenResponse)
+        {
+            // get email address from IdToken?
+
+            // save credentials
+            Credential.Save(CredStorageKey, CredStorageUser, authTokenResponse.AccessToken);
         }
 
 

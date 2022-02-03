@@ -99,7 +99,7 @@ namespace VisualStudio2022
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            if (_authService.AuthStatus == AuthStatus.NotStarted)
+            if (string.IsNullOrEmpty(_authService.UserToken) && _authService.AuthStatus == AuthStatus.NotStarted)
             {
                 await _authService.InitiateDeviceFlowAsync();
             } 
