@@ -6,29 +6,17 @@
 
         public AuthStatus NewStatus { get; }
 
-        public GithubAuthStatusChangedEventArgs(AuthStatus oldStatus, AuthStatus newStatus)
+        // Temporary code for auth device flow
+        public string UserCode { get; }
+
+        // Access token
+        public string UserToken { get; }
+
+        public GithubAuthStatusChangedEventArgs(AuthStatus oldStatus, AuthStatus newStatus, string userCode, string userToken)
         {
             OldStatus = oldStatus;
             NewStatus = newStatus;
-        }
-    }
-
-    public class GithubAuthDeviceCodeReceivedEventArgs : EventArgs
-    {
-        public string UserCode { get; }
-
-        public GithubAuthDeviceCodeReceivedEventArgs(string userCode)
-        {
             UserCode = userCode;
-        }
-    }
-
-    public class GithubAuthUserTokenReceivedEventArgs : EventArgs
-    {
-        public string UserToken { get; }
-
-        public GithubAuthUserTokenReceivedEventArgs(string userToken)
-        {
             UserToken = userToken;
         }
     }

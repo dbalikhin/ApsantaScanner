@@ -16,6 +16,7 @@ namespace VisualStudio2022
     {
         [Import]
         internal SVsServiceProvider ServiceProvider = null;
+        private AuthService _authService;
 
         public MarkdownBrowserViewModel MarkdownBrowserViewModel { get; set; }
         MarkdownBrowser _markdownBrowser;
@@ -31,8 +32,9 @@ namespace VisualStudio2022
             this.Loaded += MyToolWindowControl_Loaded;
         }
 
-        public MyToolWindowControl(MarkdownBrowserViewModel mbViewModel)
+        public MyToolWindowControl(MarkdownBrowserViewModel mbViewModel, AuthService authService)
         {
+            _authService = authService;
             _filename = mbViewModel.DocumentFileName;
             _mdocument = mbViewModel.MDocument;
             _markdownBrowser = new MarkdownBrowser(mbViewModel);
@@ -40,6 +42,29 @@ namespace VisualStudio2022
 
             InitializeComponent();
             this.Loaded += MyToolWindowControl_Loaded;
+            _authService.GithubAuthStatusChanged += AuthService_GithubAuthStatusChanged;
+        }
+
+        private void AuthService_GithubAuthStatusChanged(object sender, GithubAuthStatusChangedEventArgs e)
+        {
+            if (e.NewStatus == AuthStatus.NotStarted)
+            {
+                lStatus.Content = "Not Started";
+            }
+            if (e.NewStatus == AuthStatus.DeviceCodeReceived)
+            {
+                // provide instructions to enter the code in a browser
+                lStatus.Content = "DeviceCodeReceived : " + e.UserCode;
+            }
+            else if (e.NewStatus == AuthStatus.TokenReceived)
+            {
+                // Update UI
+                lStatus.Content = "TokenReceived : " + e.UserToken;
+            }
+            else if (e.NewStatus != AuthStatus.Error)
+            {
+                lStatus.Content = "Error boo!!!!";
+            }
         }
 
         public void UpdateBrowser(string text)
@@ -73,17 +98,11 @@ namespace VisualStudio2022
         private async void btnAuth_Click(object sender, RoutedEventArgs e)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            using var client = new HttpClient();
-            
-            var authorizationResponse = await AuthService.StartDeviceFlowAsync(client);
-            lAuthCode.Content = authorizationResponse.DeviceCode;
-            AuthService.OpenWebPage(authorizationResponse.VerificationUri);
 
-
-            var tokenResponse = await AuthService.GetTokenAsync(client, authorizationResponse);
-
-            
-            
+            if (_authService.AuthStatus == AuthStatus.NotStarted)
+            {
+                await _authService.InitiateDeviceFlowAsync();
+            } 
         }
 
      

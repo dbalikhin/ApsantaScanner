@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace VisualStudio2022.Auth
 {
-    public class AuthService
+    public interface IAuthService
+    {
+        public Task InitiateDeviceFlowAsync();
+    }
+
+    public class AuthService : IAuthService
     {      
         private const string ClientId = "Iv1.c51720e62268aece";
 
@@ -28,35 +33,16 @@ namespace VisualStudio2022.Auth
                     previousAuthStatus = currentAuthStatus;
                     currentAuthStatus = value;
 
-                    GithubAuthStatusChanged?.Invoke(this, new GithubAuthStatusChangedEventArgs(previousAuthStatus, currentAuthStatus));
+                    GithubAuthStatusChanged?.Invoke(this, new GithubAuthStatusChangedEventArgs(previousAuthStatus, currentAuthStatus, userCode, userToken));
                 }
             }
         }
-      
-        public string UserCode
-        {
-            get => userCode;
-            set
-            {
-                userCode = value;
-                GithubAuthDeviceCodeRecieved?.Invoke(this, new GithubAuthDeviceCodeReceivedEventArgs(userCode));
-                
-            }
-        }
-        public string UserToken
-        {
-            get => userToken;
-            set
-            {
-                userToken = value;
-                GithubAuthUserTokenRecieved?.Invoke(this, new GithubAuthUserTokenReceivedEventArgs(userToken));
 
-            }
-        }
+        public string UserCode { get; }
+        public string UserToken { get; }
 
         public event EventHandler<GithubAuthStatusChangedEventArgs> GithubAuthStatusChanged;
-        public event EventHandler<GithubAuthDeviceCodeReceivedEventArgs> GithubAuthDeviceCodeRecieved;
-        public event EventHandler<GithubAuthUserTokenReceivedEventArgs> GithubAuthUserTokenRecieved;
+
 
         public async Task InitiateDeviceFlowAsync()
         {
@@ -65,11 +51,22 @@ namespace VisualStudio2022.Auth
             userToken = "";
             userCode = "";
 
-            HttpClient client = new();
-            var authCodeResponse = await StartDeviceFlowAsync(client);
-            OpenWebPage(authCodeResponse.VerificationUri);
-            var authTokenResponse = await GetTokenAsync(client, authCodeResponse);
+            using (HttpClient client = new())
+            {
+                var authCodeResponse = await StartDeviceFlowAsync(client);
+
+                if (!string.IsNullOrWhiteSpace(authCodeResponse.DeviceCode))
+                {
+                    // verification url is partially trusted, add extra validation here to prevent a possible command injection
+                    OpenWebPage(authCodeResponse.VerificationUri);
+
+                    var authTokenResponse = await GetTokenAsync(client, authCodeResponse);
+                }
+                
+            } 
         }
+
+
 
         public static void OpenWebPage(string url)
         {
@@ -95,10 +92,12 @@ namespace VisualStudio2022.Auth
             response.EnsureSuccessStatusCode();
             var daResponseString = await response.Content.ReadAsStringAsync();
             //var json = JsonSerializer.Deserialize<DeviceAuthorizationResponse>(daResponseString);
-            var json = JsonConvert.DeserializeObject<DeviceAuthorizationResponse>(daResponseString);
+            var authResponse = JsonConvert.DeserializeObject<DeviceAuthorizationResponse>(daResponseString);
+            
+            userCode = authResponse.UserCode;
             AuthStatus = AuthStatus.DeviceCodeReceived;
-            UserCode = json.UserCode;
-            return json;
+            
+            return authResponse;
         }
 
         public async Task<TokenResponse> GetTokenAsync(HttpClient client, DeviceAuthorizationResponse authResponse)
@@ -128,8 +127,9 @@ namespace VisualStudio2022.Auth
                     var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(json);
                     if (tokenResponse?.Error == null)
                     {
+                        userToken = tokenResponse.AccessToken;
                         AuthStatus = AuthStatus.TokenReceived;
-                        UserToken = tokenResponse.AccessToken;
+                       
                         return tokenResponse;
                     }
 

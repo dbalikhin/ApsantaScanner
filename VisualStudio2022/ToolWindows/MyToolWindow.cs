@@ -26,16 +26,11 @@ namespace VisualStudio2022
         {
             
             var sol = ApsantaPackage.CurrentSolution;
-            ApsantaPackage.AuthServiceInstance.GithubAuthUserTokenRecieved += AuthServiceInstance_GithubAuthUserTokenRecieved;
-            
+                    
             var mbViewModel = new MarkdownBrowserViewModel() { MDocument = new MDocument(""), DocumentFileName = "fake" };
-            return Task.FromResult<FrameworkElement>(new MyToolWindowControl(mbViewModel));
+            return Task.FromResult<FrameworkElement>(new MyToolWindowControl(mbViewModel, ApsantaPackage.AuthServiceInstance));
         }
 
-        private void AuthServiceInstance_GithubAuthUserTokenRecieved(object sender, Auth.GithubAuthUserTokenReceivedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
         [Guid("448df334-be26-4c43-95c9-289e20530261")]
         internal class Pane : ToolWindowPane
@@ -51,6 +46,7 @@ namespace VisualStudio2022
                     _errorListEventSelectionService = componentModel.GetService<IErrorListEventSelectionService>();
                     
                     _errorListEventSelectionService.NavigatedItemChanged += errorListEventSelectionService_NavigatedItemChanged;
+                    
                 }
                 
             }

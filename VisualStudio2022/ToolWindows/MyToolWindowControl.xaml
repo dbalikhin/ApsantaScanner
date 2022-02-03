@@ -56,6 +56,7 @@
                 <Grid >
                     <Button Content="Auth" HorizontalAlignment="Left" Margin="97,39,0,0" VerticalAlignment="Top" Click="btnAuth_Click" Height="26" Width="47"/>
                     <Label Content="Auth Code" HorizontalAlignment="Left" Margin="164,39,0,0" VerticalAlignment="Top" x:Name="lAuthCode"/>
+                    <Label Content="Status" x:Name="lStatus" HorizontalAlignment="Left" Margin="97,92,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
         </TabControl>
