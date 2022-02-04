@@ -1,6 +1,6 @@
 ﻿using ApstantaScanner.Vsix.Shared.ErrorList;
 
-namespace VisualStudio2022.MarkdownViewer.Margin
+namespace VisualStudio2022.MarkdownViewer
 {
 
     public class MarkdownBrowserViewModel

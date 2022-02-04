@@ -1,22 +1,19 @@
 ﻿using ApsantaScanner.Vsix.Shared.ErrorList;
 using ApstantaScanner.Vsix.Shared.ErrorList;
-using EnvDTE80;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Imaging;
-using System.ComponentModel.Composition;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using VisualStudio2022.MarkdownViewer;
-using VisualStudio2022.MarkdownViewer.Margin;
 
 namespace VisualStudio2022
 {
-    public class MyToolWindow : BaseToolWindow<MyToolWindow>
+    public class MainToolWindow : BaseToolWindow<MainToolWindow>
     {
-        public override string GetTitle(int toolWindowId) => "My Tool Window";
+        public override string GetTitle(int toolWindowId) => "Apsanta Scanner";
 
         public override Type PaneType => typeof(Pane);
 
@@ -28,7 +25,7 @@ namespace VisualStudio2022
             var sol = ApsantaPackage.CurrentSolution;
                     
             var mbViewModel = new MarkdownBrowserViewModel() { MDocument = new MDocument(""), DocumentFileName = "fake" };
-            return Task.FromResult<FrameworkElement>(new MyToolWindowControl(mbViewModel, ApsantaPackage.AuthServiceInstance));
+            return Task.FromResult<FrameworkElement>(new MainToolWindowControl(mbViewModel, ApsantaPackage.AuthServiceInstance));
         }
 
 
@@ -60,7 +57,7 @@ namespace VisualStudio2022
                     if (navigatedItem != null)
                     {
                         var report = GenerateReport(navigatedItem.DiagnosticItem);
-                        (Content as MyToolWindowControl).UpdateBrowser(report);
+                        (Content as MainToolWindowControl).UpdateBrowser(report);
                     }
                     
                 }               

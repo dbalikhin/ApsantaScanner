@@ -7,14 +7,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Markdig.Renderers;
-using Markdig.Syntax;
 using Microsoft.VisualStudio.PlatformUI;
 using mshtml;
 using VisualStudio2022.MarkdownViewer.Options;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using WebBrowser = System.Windows.Controls.WebBrowser;
 
-namespace VisualStudio2022.MarkdownViewer.Margin
+namespace VisualStudio2022.MarkdownViewer
 {
     public class Browser : IDisposable
     {
@@ -236,16 +235,16 @@ namespace VisualStudio2022.MarkdownViewer.Margin
             string assembly = Assembly.GetExecutingAssembly().Location;
             string assemblyDir = Path.GetDirectoryName(assembly);
 
-            return Path.Combine(assemblyDir, "MarkdownViewer\\Margin\\md-template.html");
+            return Path.Combine(assemblyDir, "MarkdownViewer\\Highlight\\md-template.html");
         }
 
         private string GetHtmlTemplate()
         {
             string baseHref = Path.GetDirectoryName(_file).Replace("\\", "/");
             string folder = GetFolder();
-            string cssHighlight = File.ReadAllText(Path.Combine(folder, "MarkdownViewer\\Margin\\highlight.css"));
-            string scriptPrismPath = Path.Combine(folder, "MarkdownViewer\\Margin\\prism.js");
-            string cssPrism = File.ReadAllText(Path.Combine(folder, "MarkdownViewer\\Margin\\prism.css"));
+            string cssHighlight = File.ReadAllText(Path.Combine(folder, "MarkdownViewer\\Highlight\\highlight.css"));
+            string scriptPrismPath = Path.Combine(folder, "MarkdownViewer\\Highlight\\prism.js");
+            string cssPrism = File.ReadAllText(Path.Combine(folder, "MarkdownViewer\\Highlight\\prism.css"));
 
             if (AdvancedOptions.Instance.EnableDarkTheme)
             {
@@ -254,8 +253,8 @@ namespace VisualStudio2022.MarkdownViewer.Margin
 
                 if (contrast == ContrastComparisonResult.ContrastHigherWithWhite)
                 {
-                    cssHighlight = File.ReadAllText(Path.Combine(folder, "MarkdownViewer\\Margin\\highlight-dark.css"));
-                    cssPrism = File.ReadAllText(Path.Combine(folder, "MarkdownViewer\\Margin\\prism-dark.css"));
+                    cssHighlight = File.ReadAllText(Path.Combine(folder, "MarkdownViewer\\Highlight\\highlight-dark.css"));
+                    cssPrism = File.ReadAllText(Path.Combine(folder, "MarkdownViewer\\Highlight\\prism-dark.css"));
                 }
             }
 

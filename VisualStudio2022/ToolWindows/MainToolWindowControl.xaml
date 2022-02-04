@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="VisualStudio2022.MyToolWindowControl"
+﻿<UserControl x:Class="VisualStudio2022.MainToolWindowControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -7,17 +7,18 @@
              xmlns:theming="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Imaging"
              xmlns:util="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Utilities"
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
+             xmlns:platform="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:toolkit="clr-namespace:Community.VisualStudio.Toolkit;assembly=Community.VisualStudio.Toolkit"
-             toolkit:Themes.UseVsTheme="True"
+             toolkit:Themes.UseVsTheme="True"           
              mc:Ignorable="d"
              d:DesignHeight="800"
              d:DesignWidth="800"
              Height="auto"
              Width="auto"             
-             Name="MyToolWindow">
+             Name="MainToolWindow">
     <Grid>
-        <TabControl toolkit:Themes.UseVsTheme="True">
-            <TabItem Header="TabItem">
+        <TabControl toolkit:Themes.UseVsTheme="True" >
+            <TabItem toolkit:Themes.UseVsTheme="True" Header="Review">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="70" />
@@ -27,18 +28,18 @@
                         <StackPanel Orientation="Horizontal"  Margin="10">
 
                             <Button Content="In Test"
-                    Click="button1_Click"
-                    Width="120"
-                    Height="40"
-                    Name="button1"
-                    Margin="15,0,15,0" />
+                                Click="button1_Click"
+                                Width="120"
+                                Height="40"
+                                Name="button1"
+                                Margin="15,0,15,0" />
 
                             <Button Content="False Positive"
-                    Click="button1_Click"
-                    Width="120"
-                    Height="40"
-                    Name="button2"
-                    Margin="15,0,15,0" />
+                                Click="button1_Click"
+                                Width="120"
+                                Height="40"
+                                Name="button2"
+                                Margin="15,0,15,0" />
 
                         </StackPanel>
 
@@ -52,12 +53,14 @@
 
                 </Grid>
             </TabItem>
-            <TabItem Header="Settings" x:Name="TabSettings">
+            <TabItem toolkit:Themes.UseVsTheme="True"  Header="Settings" x:Name="TabSettings">
                 <Grid >
                     <Button Content="Auth" HorizontalAlignment="Left" Margin="97,39,0,0" VerticalAlignment="Top" Click="btnAuth_Click" Height="26" Width="47"/>
                     <Label Content="Auth Code" HorizontalAlignment="Left" Margin="164,39,0,0" VerticalAlignment="Top" x:Name="lAuthCode"/>
                     <Label Content="Status" x:Name="lStatus" HorizontalAlignment="Left" Margin="97,92,0,0" VerticalAlignment="Top"/>
                 </Grid>
+            </TabItem>
+            <TabItem toolkit:Themes.UseVsTheme="True"  Header="Configuration" x:Name="TabConfiguration">
             </TabItem>
         </TabControl>
     </Grid>

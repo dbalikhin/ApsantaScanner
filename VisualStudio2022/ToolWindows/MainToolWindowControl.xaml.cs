@@ -1,18 +1,12 @@
-﻿using EnvDTE;
-using GitHub.Authentication.CredentialManagement;
-using Microsoft.VisualStudio.Shell.Interop;
-using System.ComponentModel.Composition;
-using System.Net.Http;
+﻿using System.ComponentModel.Composition;
 using System.Windows;
 using System.Windows.Controls;
 using VisualStudio2022.Auth;
 using VisualStudio2022.MarkdownViewer;
-using VisualStudio2022.MarkdownViewer.Margin;
-using VisualStudio2022.MarkdownViewer.Options;
 
 namespace VisualStudio2022
 {
-    public partial class MyToolWindowControl : UserControl
+    public partial class MainToolWindowControl : UserControl
     {
         [Import]
         internal SVsServiceProvider ServiceProvider = null;
@@ -26,13 +20,13 @@ namespace VisualStudio2022
         private Browser _browser;
         private Microsoft.CodeAnalysis.Solution _solution;
 
-        public MyToolWindowControl()
+        public MainToolWindowControl()
         {
             InitializeComponent();
-            this.Loaded += MyToolWindowControl_Loaded;
+            this.Loaded += MainToolWindowControl_Loaded;
         }
 
-        public MyToolWindowControl(MarkdownBrowserViewModel mbViewModel, AuthService authService)
+        public MainToolWindowControl(MarkdownBrowserViewModel mbViewModel, AuthService authService)
         {
             _authService = authService;
             _filename = mbViewModel.DocumentFileName;
@@ -41,7 +35,7 @@ namespace VisualStudio2022
             //_solution = solution;
 
             InitializeComponent();
-            this.Loaded += MyToolWindowControl_Loaded;
+            this.Loaded += MainToolWindowControl_Loaded;
             _authService.GithubAuthStatusChanged += AuthService_GithubAuthStatusChanged;
         }
 
@@ -73,7 +67,7 @@ namespace VisualStudio2022
             _markdownBrowser.Browser.UpdateBrowserAsync(mdoc).FireAndForget();
         }
 
-        private void MyToolWindowControl_Loaded(object sender, RoutedEventArgs e)
+        private void MainToolWindowControl_Loaded(object sender, RoutedEventArgs e)
         {
             //mBrowser = _markdownBrowser.Browser._browser;
             
@@ -86,15 +80,12 @@ namespace VisualStudio2022
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            //AuthService.Main.
-            
-            //Credential.
 
             VS.MessageBox.Show("VisualStudio2022", "Button clicked");
             
         }
 
-  
+        // TODO: https://stackoverflow.com/questions/12556993/significance-of-declaring-a-wpf-event-handler-as-async-in-c-sharp-5
         private async void btnAuth_Click(object sender, RoutedEventArgs e)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();

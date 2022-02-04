@@ -10,12 +10,12 @@
     <!--This section defines the elements the user can interact with, like a menu command or a button or combo box in a toolbar. -->
     <Buttons>
       <Button guid="VisualStudio2022" id="MyCommand" priority="0x0100" type="Button">
-        <Parent guid="VSMainMenu" id="View.DevWindowsGroup.OtherWindows.Group1"/>
+        <Parent guid="VSMainMenu" id="Extensions.DefaultGroup"/>
         <Icon guid="ImageCatalogGuid" id="ToolWindow" />
         <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
-          <ButtonText>My Tool Window</ButtonText>
-          <LocCanonicalName>.View.MyToolWindow</LocCanonicalName>
+          <ButtonText>Apsanta Scanner</ButtonText>
+          <LocCanonicalName>.Extensions.MainToolWindow</LocCanonicalName>
         </Strings>
       </Button>
     </Buttons>

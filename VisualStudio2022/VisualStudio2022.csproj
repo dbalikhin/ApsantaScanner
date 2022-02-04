@@ -57,12 +57,12 @@
     <Compile Include="MarkdownViewer\MDocument.cs" />
     <Compile Include="MarkdownViewer\Document.cs" />
     <Compile Include="MarkdownViewer\ExtensionMethods.cs" />
-    <Compile Include="MarkdownViewer\Margin\Browser.cs" />
-    <Compile Include="MarkdownViewer\Margin\MarkdownBrowserViewModel.cs" />
-    <Compile Include="MarkdownViewer\Margin\MarkdownBrowser.cs" />
+    <Compile Include="MarkdownViewer\Browser.cs" />
+    <Compile Include="MarkdownViewer\MarkdownBrowserViewModel.cs" />
+    <Compile Include="MarkdownViewer\MarkdownBrowser.cs" />
     <Compile Include="MarkdownViewer\Options\AdvancedOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Commands\MyToolWindowCommand.cs" />
+    <Compile Include="Commands\MainToolWindowCommand.cs" />
     <Compile Include="UIExtensions.cs" />
     <Compile Include="VisualStudio2022Package.cs" />
     <Compile Include="source.extension.cs">
@@ -83,22 +83,22 @@
       <Generator>VsixManifestGenerator</Generator>
       <LastGenOutput>source.extension.cs</LastGenOutput>
     </None>
-    <Content Include="MarkdownViewer\Margin\highlight-dark.css">
+    <Content Include="MarkdownViewer\Highlight\highlight-dark.css">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="MarkdownViewer\Margin\highlight.css">
+    <Content Include="MarkdownViewer\Highlight\highlight.css">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="MarkdownViewer\Margin\md-template.html">
+    <Content Include="MarkdownViewer\Highlight\md-template.html">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="MarkdownViewer\Margin\prism-dark.css">
+    <Content Include="MarkdownViewer\Highlight\prism-dark.css">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="MarkdownViewer\Margin\prism.css">
+    <Content Include="MarkdownViewer\Highlight\prism.css">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="MarkdownViewer\Margin\prism.js">
+    <Content Include="MarkdownViewer\Highlight\prism.js">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\Icon.png">
@@ -115,13 +115,13 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ToolWindows\MyToolWindow.cs" />
-    <Page Include="ToolWindows\MyToolWindowControl.xaml">
+    <Compile Include="ToolWindows\MainToolWindow.cs" />
+    <Page Include="ToolWindows\MainToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="ToolWindows\MyToolWindowControl.xaml.cs">
-      <DependentUpon>MyToolWindowControl.xaml</DependentUpon>
+    <Compile Include="ToolWindows\MainToolWindowControl.xaml.cs">
+      <DependentUpon>MainToolWindowControl.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

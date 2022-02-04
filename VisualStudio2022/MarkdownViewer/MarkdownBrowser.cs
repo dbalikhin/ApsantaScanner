@@ -1,9 +1,8 @@
 ﻿using Microsoft.VisualStudio.PlatformUI;
-using System.ComponentModel.Composition;
 
-namespace VisualStudio2022.MarkdownViewer.Margin
+namespace VisualStudio2022.MarkdownViewer
 {
-    
+
     public class MarkdownBrowser
     {
         private readonly MDocument _mdocument;

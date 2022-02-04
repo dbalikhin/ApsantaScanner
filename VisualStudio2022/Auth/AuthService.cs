@@ -55,7 +55,7 @@ namespace VisualStudio2022.Auth
         public void LoadSavedCredentials()
         {
             var credential = Credential.Load(CredStorageKey);
-            if (credential == null)
+            if (credential != null)
                 userToken = credential.Password;
         }
 

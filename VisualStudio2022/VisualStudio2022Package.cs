@@ -7,8 +7,6 @@ using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.LanguageServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Linq;
-using VisualStudio2022.MarkdownViewer.Margin;
 using Microsoft.VisualStudio;
 using VisualStudio2022.Auth;
 
@@ -16,10 +14,10 @@ namespace VisualStudio2022
 {
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration(Vsix.Name, Vsix.Description, Vsix.Version)]
-    [ProvideToolWindow(typeof(MyToolWindow.Pane), Style = VsDockStyle.Float, Window = WindowGuids.MainWindow)]
+    [ProvideToolWindow(typeof(MainToolWindow.Pane), Style = VsDockStyle.Tabbed, Window = WindowGuids.SolutionExplorer)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string, PackageAutoLoadFlags.BackgroundLoad)]
-    [ProvideToolWindowVisibility(typeof(MyToolWindow.Pane), VSConstants.UICONTEXT.SolutionExistsAndFullyLoaded_string)]
+    [ProvideToolWindowVisibility(typeof(MainToolWindow.Pane), VSConstants.UICONTEXT.SolutionExistsAndFullyLoaded_string)]
     [Guid(PackageGuids.VisualStudio2022String)]
     public sealed class VisualStudio2022Package : ToolkitPackage
     {

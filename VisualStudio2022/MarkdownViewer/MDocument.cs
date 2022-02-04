@@ -17,6 +17,7 @@ namespace VisualStudio2022.MarkdownViewer
             .UsePragmaLines()
             .UsePreciseSourceLocation()
             .UseYamlFrontMatter()
+
             .UseEmojiAndSmiley()
             .Build();
 
