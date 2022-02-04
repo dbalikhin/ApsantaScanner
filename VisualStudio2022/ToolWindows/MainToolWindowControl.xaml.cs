@@ -43,21 +43,24 @@ namespace VisualStudio2022
         {
             if (e.NewStatus == AuthStatus.NotStarted)
             {
-                lStatus.Content = "Not Started";
+                
             }
             if (e.NewStatus == AuthStatus.DeviceCodeReceived)
             {
                 // provide instructions to enter the code in a browser
-                lStatus.Content = "DeviceCodeReceived : " + e.UserCode;
+                textBlockDeviceFlowStatus.Text = "Enter the code: " + e.UserCode;
             }
             else if (e.NewStatus == AuthStatus.TokenReceived)
             {
+                textBlockDeviceFlowStatus.Text = "Token received";
                 // Update UI
-                lStatus.Content = "TokenReceived : " + e.UserToken;
+                SetControls(true);
             }
-            else if (e.NewStatus != AuthStatus.Error)
-            {
-                lStatus.Content = "Error boo!!!!";
+            else if (e.NewStatus == AuthStatus.Error)
+            {                
+                textBlockError.Text = e.ErrorMessage;
+                SetControls(false);
+                textBlockDeviceFlowStatus.Text = "Error occured";
             }
         }
 
@@ -67,36 +70,51 @@ namespace VisualStudio2022
             _markdownBrowser.Browser.UpdateBrowserAsync(mdoc).FireAndForget();
         }
 
+        private void SetControls(bool isAuthorized)
+        {
+            if (isAuthorized)
+            {
+                checkBoxAuthStatus.IsChecked = true;
+                checkBoxAuthStatus.Content = "Authorized";
+                buttonAuthenticate.Content = "Re-authorize";
+                textBlockDeviceFlowStatus.Text = "Completed";
+                checkBoxAuthStatus.IsEnabled = false;
+            }
+            else
+            {
+                checkBoxAuthStatus.IsChecked = false;             
+                checkBoxAuthStatus.Content = "Not Authorized";
+                buttonAuthenticate.Content = "Authorize";
+                textBlockDeviceFlowStatus.Text = "Not Requested";
+                checkBoxAuthStatus.IsEnabled = false;
+            }
+            buttonAuthenticate.IsEnabled = true;
+
+        }
+
         private void MainToolWindowControl_Loaded(object sender, RoutedEventArgs e)
         {
-            //mBrowser = _markdownBrowser.Browser._browser;
+            // check for auth status
+            var isAuthorized = !string.IsNullOrEmpty(_authService.UserToken);
+            SetControls(isAuthorized);
+            
             
             if (!BrowserRow.Children.Contains(_markdownBrowser.Browser._browser))
             {
                 BrowserRow.Children.Add(_markdownBrowser.Browser._browser);
             }
-            //ppp.Children.Add(Browser._browser);
         }
-
-        private void button1_Click(object sender, RoutedEventArgs e)
-        {
-
-            VS.MessageBox.Show("VisualStudio2022", "Button clicked");
-            
-        }
-
+        
         // TODO: https://stackoverflow.com/questions/12556993/significance-of-declaring-a-wpf-event-handler-as-async-in-c-sharp-5
-        private async void btnAuth_Click(object sender, RoutedEventArgs e)
+        private async void buttonAuthenticate_Click(object sender, RoutedEventArgs e)
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            if (string.IsNullOrEmpty(_authService.UserToken) && _authService.AuthStatus == AuthStatus.NotStarted)
+            if (_authService.AuthStatus == AuthStatus.NotStarted || _authService.AuthStatus == AuthStatus.TokenReceived || _authService.AuthStatus == AuthStatus.Error)
             {
+                textBlockDeviceFlowStatus.Text = "Started";
+                buttonAuthenticate.IsEnabled = false;
                 await _authService.InitiateDeviceFlowAsync();
-            } 
+            }
         }
-
-     
     }
 
 

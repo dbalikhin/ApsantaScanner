@@ -21,4 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ErrorList\ErrorListEventProcessorProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NotifyPropertyChangedObject.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Github\" />
+  </ItemGroup>
 </Project>

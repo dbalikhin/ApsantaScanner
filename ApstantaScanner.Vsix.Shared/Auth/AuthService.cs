@@ -16,15 +16,10 @@ namespace ApstantaScanner.Vsix.Shared.Auth
     {
         private const string CredStorageKey = "apsanta_user_key";
         private const string CredStorageUser = "apsanta_user";
-        private const string ClientId = "Iv1.c51720e62268aece";
-
-        //{"access_token":"...","token_type":"bearer","scope":""}
+        private const string ClientId = "Iv1.c51720e62268aece";        
 
         private AuthStatus currentAuthStatus = AuthStatus.NotStarted;
         private AuthStatus previousAuthStatus = AuthStatus.NotStarted;
-
-        private string userCode = "";
-        private string userToken = "";
         
         public AuthStatus AuthStatus
         {
@@ -36,13 +31,15 @@ namespace ApstantaScanner.Vsix.Shared.Auth
                     previousAuthStatus = currentAuthStatus;
                     currentAuthStatus = value;
 
-                    GithubAuthStatusChanged?.Invoke(this, new GithubAuthStatusChangedEventArgs(previousAuthStatus, currentAuthStatus, userCode, userToken));
+                    GithubAuthStatusChanged?.Invoke(this, new GithubAuthStatusChangedEventArgs(previousAuthStatus, currentAuthStatus, UserCode, UserToken, ErrorMessage));
                 }
             }
         }
 
-        public string UserCode { get; }
-        public string UserToken { get; }
+        public string UserCode { get; private set; }
+        public string UserToken { get; private set; }
+
+        public string ErrorMessage{ get; private set; }
 
         public event EventHandler<GithubAuthStatusChangedEventArgs> GithubAuthStatusChanged;
 
@@ -56,16 +53,21 @@ namespace ApstantaScanner.Vsix.Shared.Auth
         {
             var credential = Credential.Load(CredStorageKey);
             if (credential != null)
-                userToken = credential.Password;
+                UserToken = credential.Password;
         }
 
-
-        public async Task InitiateDeviceFlowAsync()
+        private void CleanVariables()
         {
             currentAuthStatus = AuthStatus.NotStarted;
             previousAuthStatus = AuthStatus.NotStarted;
-            userToken = "";
-            userCode = "";
+            UserToken = "";
+            UserCode = "";
+            ErrorMessage = "";
+        }
+
+        public async Task InitiateDeviceFlowAsync()
+        {
+            CleanVariables();
 
             using (HttpClient client = new())
             {
@@ -89,9 +91,7 @@ namespace ApstantaScanner.Vsix.Shared.Auth
         }
 
         public void SaveCredentials(TokenResponse authTokenResponse)
-        {
-            // get email address from IdToken?
-
+        { 
             // save credentials
             Credential.Save(CredStorageKey, CredStorageUser, authTokenResponse.AccessToken);
         }
@@ -124,7 +124,7 @@ namespace ApstantaScanner.Vsix.Shared.Auth
             //var json = JsonSerializer.Deserialize<DeviceAuthorizationResponse>(daResponseString);
             var authResponse = JsonConvert.DeserializeObject<DeviceAuthorizationResponse>(daResponseString);
             
-            userCode = authResponse.UserCode;
+            UserCode = authResponse.UserCode;
             AuthStatus = AuthStatus.DeviceCodeReceived;
             
             return authResponse;
@@ -133,7 +133,7 @@ namespace ApstantaScanner.Vsix.Shared.Auth
         public async Task<TokenResponse> GetTokenAsync(HttpClient client, DeviceAuthorizationResponse authResponse)
         {            
             string tokenEndpoint = "https://github.com/login/oauth/access_token";
-
+            
             // Poll until we get a valid token response or a fatal error
             int pollingDelay = authResponse.Interval;
             while (true)
@@ -157,7 +157,7 @@ namespace ApstantaScanner.Vsix.Shared.Auth
                     var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(json);
                     if (tokenResponse?.Error == null)
                     {
-                        userToken = tokenResponse.AccessToken;
+                        UserToken = tokenResponse.AccessToken;
                         AuthStatus = AuthStatus.TokenReceived;
                        
                         return tokenResponse;
@@ -167,6 +167,7 @@ namespace ApstantaScanner.Vsix.Shared.Auth
                     {
                         case "authorization_pending":
                             // Not complete yet, wait and try again later
+                            AuthStatus = AuthStatus.AuthorizationPending;
                             break;
                         case "slow_down":
                             // Not complete yet, and we should slow down the polling
@@ -175,8 +176,8 @@ namespace ApstantaScanner.Vsix.Shared.Auth
                         default:
                             // Some other error, nothing we can do but throw
                             AuthStatus = AuthStatus.Error;
-                            throw new Exception(
-                                $"Authorization failed: {tokenResponse.Error} - {tokenResponse.ErrorDescription}");
+                            ErrorMessage = $"Authorization failed: {tokenResponse.Error} - {tokenResponse.ErrorDescription}";
+                            break;
                     }
 
                     await Task.Delay(TimeSpan.FromSeconds(pollingDelay));
@@ -189,6 +190,7 @@ namespace ApstantaScanner.Vsix.Shared.Auth
     {
         NotStarted = 0,
         DeviceCodeReceived,
+        AuthorizationPending,
         TokenReceived,
         Error
     }

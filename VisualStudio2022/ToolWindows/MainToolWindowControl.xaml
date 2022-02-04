@@ -13,8 +13,8 @@
              mc:Ignorable="d"
              d:DesignHeight="800"
              d:DesignWidth="800"
-             Height="auto"
-             Width="auto"             
+             Height="800"
+             Width="800"             
              Name="MainToolWindow">
     <Grid>
         <TabControl toolkit:Themes.UseVsTheme="True" >
@@ -27,15 +27,13 @@
                     <Grid Grid.Row="0">
                         <StackPanel Orientation="Horizontal"  Margin="10">
 
-                            <Button Content="In Test"
-                                Click="button1_Click"
+                            <Button Content="In Test"                                
                                 Width="120"
                                 Height="40"
                                 Name="button1"
                                 Margin="15,0,15,0" />
 
-                            <Button Content="False Positive"
-                                Click="button1_Click"
+                            <Button Content="False Positive"                                
                                 Width="120"
                                 Height="40"
                                 Name="button2"
@@ -53,14 +51,49 @@
 
                 </Grid>
             </TabItem>
-            <TabItem toolkit:Themes.UseVsTheme="True"  Header="Settings" x:Name="TabSettings">
-                <Grid >
-                    <Button Content="Auth" HorizontalAlignment="Left" Margin="97,39,0,0" VerticalAlignment="Top" Click="btnAuth_Click" Height="26" Width="47"/>
-                    <Label Content="Auth Code" HorizontalAlignment="Left" Margin="164,39,0,0" VerticalAlignment="Top" x:Name="lAuthCode"/>
-                    <Label Content="Status" x:Name="lStatus" HorizontalAlignment="Left" Margin="97,92,0,0" VerticalAlignment="Top"/>
-                </Grid>
-            </TabItem>
             <TabItem toolkit:Themes.UseVsTheme="True"  Header="Configuration" x:Name="TabConfiguration">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="250" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>                        
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition Width="*" />
+
+                    </Grid.ColumnDefinitions>
+                    <StackPanel x:Name="stackPanelAuthStatus" Grid.Row="0" Grid.Column="0" Margin="10,10,10,10" Grid.ColumnSpan="2">
+                        <TextBlock FontWeight="Bold">Auth Status:</TextBlock>
+                        <CheckBox x:Name="checkBoxAuthStatus" Margin="10,10,0,0" IsEnabled="False" IsChecked="False" >Not Authorized</CheckBox>
+                        <Button x:Name="buttonAuthenticate" Margin="10,10,0,0" Width="118" Content="Authorize" HorizontalAlignment="Left" Grid.Row="0" Click="buttonAuthenticate_Click"/>
+                        <TextBlock x:Name="textBlockDeviceFlowLabel"  Margin="0,10,0,0" FontWeight="Bold">Device flow status:</TextBlock>
+                        <TextBlock x:Name="textBlockDeviceFlowStatus" Margin="10,10,0,0" FontWeight="Bold">Not Requested</TextBlock>
+                    </StackPanel>
+
+
+                    <StackPanel x:Name="stackPanelAuthFlowInstruction" Grid.Row="0" Grid.Column="2" Margin="10,10,10,10">
+                        <TextBlock Margin="0,0,0,10">Start OAuth 2 Device Code flow to get a token for communicating with the Github API.
+                            <LineBreak/>
+                            The access token will be stored in the credential manager but you can re-authorize the app if required.
+                        </TextBlock>
+                        <TextBlock Margin="0,0,0,10">Step 1: Click "Authorize" button.</TextBlock>
+                        <TextBlock Margin="0,0,0,10">Step 2: Enter a user verification code from the device flow status.</TextBlock>
+                        <TextBlock Margin="0,0,0,10">Step 3: The app polls for the user authentication status. 
+                            <LineBreak/>
+                            Once it has been completed, the app will be able to make Github API calls with a new access token.
+                        </TextBlock>
+                        <TextBlock x:Name="textBlockError" Margin="0,0,0,10"></TextBlock>
+                    </StackPanel>
+
+
+
+                </Grid>
+
+
+
+
+
+
             </TabItem>
         </TabControl>
     </Grid>
