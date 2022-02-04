@@ -9,6 +9,10 @@
     <Import_RootNamespace>ApstantaScanner.Vsix.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Auth\AuthService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Auth\DeviceAuthorizationResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Auth\GithubAuthEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Auth\TokenResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorList\DiagnosticItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorList\ErrorListItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorList\ErrorListSelectionChangedEventArgs.cs" />

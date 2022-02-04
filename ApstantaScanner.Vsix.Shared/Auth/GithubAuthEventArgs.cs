@@ -1,4 +1,4 @@
-﻿namespace VisualStudio2022.Auth
+﻿namespace ApstantaScanner.Vsix.Shared.Auth
 {
     public class GithubAuthStatusChangedEventArgs : EventArgs
     {

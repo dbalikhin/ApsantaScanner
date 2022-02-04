@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.Composition;
+﻿using ApstantaScanner.Vsix.Shared.Auth;
+using System.ComponentModel.Composition;
 using System.Windows;
 using System.Windows.Controls;
-using VisualStudio2022.Auth;
 using VisualStudio2022.MarkdownViewer;
 
 namespace VisualStudio2022

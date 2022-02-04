@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace VisualStudio2022.Auth
+namespace ApstantaScanner.Vsix.Shared.Auth
 {
     public class DeviceAuthorizationResponse
     {

@@ -49,10 +49,6 @@
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Auth\AuthService.cs" />
-    <Compile Include="Auth\DeviceAuthorizationResponse.cs" />
-    <Compile Include="Auth\GithubAuthEventArgs.cs" />
-    <Compile Include="Auth\TokenResponse.cs" />
     <Compile Include="Diagnostics\DiagnosticHasher.cs" />
     <Compile Include="MarkdownViewer\MDocument.cs" />
     <Compile Include="MarkdownViewer\Document.cs" />

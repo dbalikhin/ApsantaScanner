@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.LanguageServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.VisualStudio;
-using VisualStudio2022.Auth;
+using ApstantaScanner.Vsix.Shared.Auth;
 
 namespace VisualStudio2022
 {

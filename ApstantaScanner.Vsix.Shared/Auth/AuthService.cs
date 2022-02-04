@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace VisualStudio2022.Auth
+namespace ApstantaScanner.Vsix.Shared.Auth
 {
     public interface IAuthService
     {
