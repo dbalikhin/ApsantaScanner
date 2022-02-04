@@ -12,9 +12,7 @@
              toolkit:Themes.UseVsTheme="True"           
              mc:Ignorable="d"
              d:DesignHeight="800"
-             d:DesignWidth="800"
-             Height="800"
-             Width="800"             
+             d:DesignWidth="800"             
              Name="MainToolWindow">
     <Grid>
         <TabControl toolkit:Themes.UseVsTheme="True" >
