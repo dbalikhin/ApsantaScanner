@@ -21,7 +21,7 @@ namespace Apsanta.Scanner
             "DoNotUseInsecureRandomness",
             "DoNotUseInsecureRandomness",
             DiagnosticCategory.Security,
-            RuleLevel.Disabled,
+            RuleLevel.BuildWarning,
             description: "DoNotUseInsecureRandomness",
             isPortedFxCopRule: false,
             isDataflowRule: false);

@@ -173,13 +173,15 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
             entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.ErrorCode, out var code);
 
             // ignore findings from other analyzers (excluding first party analyzers for now)
-            if (!code.StartsWith("APS", StringComparison.InvariantCulture) && !code.StartsWith("CS", StringComparison.InvariantCulture) && !code.StartsWith("CA", StringComparison.InvariantCulture))
+            if (!code.StartsWith("APS", StringComparison.InvariantCulture) && !code.StartsWith("SCS", StringComparison.InvariantCulture) && !code.StartsWith("CS", StringComparison.InvariantCulture) && !code.StartsWith("CA", StringComparison.InvariantCulture))
             { 
                 return false;
             }
 
             entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.Text, out var text);
             entryHandle.TryGetValue<int>(StandardTableColumnDefinitions.Line, out var line);
+            entryHandle.TryGetValue<int>(StandardTableColumnDefinitions.Column, out var column);
+            entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.ProjectName, out var projectName);
             errorListItem = new ErrorListItem()
             {
                 DiagnosticItem = new DiagnosticItem()
@@ -187,6 +189,8 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
                     ErrorCode = code,
                     ErrorText = text,
                     Line = line,
+                    Column = column,
+                    ProjectName = projectName,
                 }
             };
 

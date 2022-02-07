@@ -9,6 +9,14 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.VisualStudio;
 using ApstantaScanner.Vsix.Shared.Auth;
+using System.Linq;
+using System.Threading.Tasks;
+using ApstantaScanner.Vsix.Shared.ErrorList;
+using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using ApsantaScanner.Security.Taint;
+using System.Reflection;
 
 namespace VisualStudio2022
 {
@@ -34,8 +42,7 @@ namespace VisualStudio2022
 
             /*
             foreach (var project in workspace.CurrentSolution.Projects)
-            {
-                
+            {         
                 var compilation = await project.GetCompilationAsync();
 
                 var diagnostics = compilation?.GetDiagnostics().Where(d => d.Severity != DiagnosticSeverity.Hidden);
@@ -48,8 +55,8 @@ namespace VisualStudio2022
                 }
                   
                 
-            }
-            */
+            }*/
+            
             await this.RegisterCommandsAsync();
             
 
@@ -58,5 +65,38 @@ namespace VisualStudio2022
         }
 
         public AuthService AuthServiceInstance { get; private set; }
+
+        public async Task<Diagnostic> GetDiagnosticDetailsAsync(DiagnosticItem diagnosticItem)
+        {
+            var project = CurrentSolution.Projects.FirstOrDefault(p => p.Name == diagnosticItem.ProjectName);
+            var compilation = await project.GetCompilationAsync().ConfigureAwait(false);
+
+            List<DiagnosticAnalyzer> analyzers = new();
+            var types = typeof(PathTraversalTaintAnalyzer).GetTypeInfo().Assembly.DefinedTypes;
+            foreach (var type in types)
+            {
+                if (type.IsAbstract)
+                    continue;
+
+                var secAttributes = type.GetCustomAttributes(typeof(DiagnosticAnalyzerAttribute), false)
+                                            .Cast<DiagnosticAnalyzerAttribute>();
+                foreach (var attribute in secAttributes)
+                {
+                    var analyzer = (DiagnosticAnalyzer)Activator.CreateInstance(type.AsType());
+
+                    analyzers.Add(analyzer);
+                    break;
+                }
+            }
+
+
+            var compilationWithAnalyzers = compilation.WithAnalyzers(analyzers.ToImmutableArray(), project.AnalyzerOptions);
+            var ds =  await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().ConfigureAwait(false);
+            var diagnostic = ds.FirstOrDefault(d => d.Id == diagnosticItem.ErrorCode); 
+
+            //compilation?.GetDiagnostics().FirstOrDefault(d => d.Id == diagnosticItem.ErrorCode);
+
+            return diagnostic;
+        }
     }
 }

@@ -32,6 +32,7 @@ namespace VisualStudio2022
         [Guid("448df334-be26-4c43-95c9-289e20530261")]
         internal class Pane : ToolWindowPane
         {
+            public VisualStudio2022Package ApsantaPackage => Package as VisualStudio2022Package;
             private readonly IErrorListEventSelectionService _errorListEventSelectionService;
             public Pane()
             {
@@ -56,8 +57,10 @@ namespace VisualStudio2022
                     
                     if (navigatedItem != null)
                     {
+                        var d = ApsantaPackage.GetDiagnosticDetailsAsync(navigatedItem.DiagnosticItem).Result;
                         var report = GenerateReport(navigatedItem.DiagnosticItem);
                         (Content as MainToolWindowControl).UpdateBrowser(report);
+                        
                     }
                     
                 }               

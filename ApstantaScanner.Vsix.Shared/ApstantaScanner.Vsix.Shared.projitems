@@ -9,6 +9,7 @@
     <Import_RootNamespace>ApstantaScanner.Vsix.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Analysis\CodeAnalysisService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Auth\AuthService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Auth\DeviceAuthorizationResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Auth\GithubAuthEventArgs.cs" />

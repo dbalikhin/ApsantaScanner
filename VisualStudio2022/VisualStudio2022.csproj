@@ -159,6 +159,18 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\src\ApsantaScanner.Package\ApsantaScanner.Package.csproj">
+      <Project>{125E5926-DFA3-4DBF-BB4A-5A2CC54D0D96}</Project>
+      <Name>ApsantaScanner.Package</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\src\ApsantaScanner\ApsantaScanner.csproj">
+      <Project>{4644B8E4-69AB-46E1-8064-6D8D31859CF2}</Project>
+      <Name>ApsantaScanner</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
     <ProjectReference Include="..\src\CredentialManagement\CredentialManagement.csproj">
       <Project>{fa07d02d-8e7c-4876-99fa-571c1256ef94}</Project>
       <Name>CredentialManagement</Name>
