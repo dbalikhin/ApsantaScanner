@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Threading;
 
 namespace ApsantaScanner
@@ -46,7 +47,12 @@ namespace ApsantaScanner
             {
                 // For all such symbols, produce a diagnostic.
                 var diagnostic = Diagnostic.Create(Rule, namedTypeSymbol.Locations[0], namedTypeSymbol.Name);
+                ObjectCache cache = MemoryCache.Default;
+                CacheItemPolicy policy = new CacheItemPolicy();
+                policy.AbsoluteExpiration =
+                    DateTimeOffset.Now.AddMinutes(10.0);
 
+                cache.Set("mydiagnostic", diagnostic, policy);
                 context.ReportDiagnostic(diagnostic);
             }
         }

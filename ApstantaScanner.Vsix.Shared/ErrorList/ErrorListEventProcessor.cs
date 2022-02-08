@@ -171,17 +171,19 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
         {
             errorListItem = null;
             entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.ErrorCode, out var code);
+            
 
             // ignore findings from other analyzers (excluding first party analyzers for now)
             if (!code.StartsWith("APS", StringComparison.InvariantCulture) && !code.StartsWith("SCS", StringComparison.InvariantCulture) && !code.StartsWith("CS", StringComparison.InvariantCulture) && !code.StartsWith("CA", StringComparison.InvariantCulture))
             { 
-                return false;
+                //return false;
             }
 
             entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.Text, out var text);
             entryHandle.TryGetValue<int>(StandardTableColumnDefinitions.Line, out var line);
             entryHandle.TryGetValue<int>(StandardTableColumnDefinitions.Column, out var column);
             entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.ProjectName, out var projectName);
+            
             errorListItem = new ErrorListItem()
             {
                 DiagnosticItem = new DiagnosticItem()
@@ -194,7 +196,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
                 }
             };
 
-            //https://github.com/namse/Roslyn-CSX/blob/master/src/VisualStudio/Core/Def/Implementation/TableDataSource/VisualStudioDiagnosticListTable.BuildTableDataSource.cs
+            // https://github.com/dotnet/roslyn/blob/main/src/VisualStudio/Core/Def/Implementation/TableDataSource/VisualStudioDiagnosticListTable.BuildTableDataSource.cs#L134-L209
             return errorListItem != null;
         }
     }

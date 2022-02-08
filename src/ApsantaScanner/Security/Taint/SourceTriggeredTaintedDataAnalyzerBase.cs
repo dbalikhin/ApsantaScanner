@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Threading;
 using Analyzer.Utilities;
 using Analyzer.Utilities.Extensions;
@@ -247,9 +248,9 @@ namespace ApsantaScanner.Security
                                                     if (!sourceSink.SinkKinds.Contains(SinkKind))
                                                     {
                                                         continue;
-                                                    }                                                   
-                                                    
-                                
+                                                    }
+
+
                                                     foreach (SymbolAccess sourceOrigin in sourceSink.SourceOrigins)
                                                     {
                                                         var initialTaintedOperations = taintedDataAnalysisResult.GetTaintedOperations();
@@ -289,7 +290,7 @@ namespace ApsantaScanner.Security
                                                         {
                                                             additionalLocations[i + 1] = taintedOperations[i].Syntax.GetLocation();
                                                         }
-                                                        
+
                                                         // Something like:
                                                         // CA3001: Potential SQL injection vulnerability was found where '{0}' in method '{1}' may be tainted by user-controlled data from '{2}' in method '{3}'.
                                                         Diagnostic diagnostic = Diagnostic.Create(
@@ -302,7 +303,15 @@ namespace ApsantaScanner.Security
                                                         sourceOrigin.Symbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat),
                                                         sourceOrigin.AccessingMethod.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)});
                                                         operationBlockAnalysisContext.ReportDiagnostic(diagnostic);
+
+                                                        ObjectCache cache = MemoryCache.Default;
+                                                        CacheItemPolicy policy = new CacheItemPolicy();
+                                                        policy.AbsoluteExpiration =
+                                                            DateTimeOffset.Now.AddMinutes(10.0);
+
+                                                        cache.Set("mydiagnostic", diagnostic, policy);
                                                     }
+                                     
                                                 }
                                             }
                                         }

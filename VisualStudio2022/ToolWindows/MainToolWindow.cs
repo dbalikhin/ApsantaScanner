@@ -1,7 +1,9 @@
 ﻿using ApsantaScanner.Vsix.Shared.ErrorList;
 using ApstantaScanner.Vsix.Shared.ErrorList;
+using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Imaging;
+using System.Runtime.Caching;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -57,6 +59,12 @@ namespace VisualStudio2022
                     
                     if (navigatedItem != null)
                     {
+                        ObjectCache cache = MemoryCache.Default;
+                        CacheItemPolicy policy = new CacheItemPolicy();
+                        policy.AbsoluteExpiration =
+                            DateTimeOffset.Now.AddMinutes(10.0);
+
+                        var ci = (Diagnostic)cache.Get("mydiagnostic");
                         var d = ApsantaPackage.GetDiagnosticDetailsAsync(navigatedItem.DiagnosticItem).Result;
                         var report = GenerateReport(navigatedItem.DiagnosticItem);
                         (Content as MainToolWindowControl).UpdateBrowser(report);

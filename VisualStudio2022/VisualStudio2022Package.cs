@@ -40,11 +40,12 @@ namespace VisualStudio2022
 
             AuthServiceInstance = new AuthService();
 
-            /*
+            
             foreach (var project in workspace.CurrentSolution.Projects)
-            {         
+            {
+                
                 var compilation = await project.GetCompilationAsync();
-
+                
                 var diagnostics = compilation?.GetDiagnostics().Where(d => d.Severity != DiagnosticSeverity.Hidden);
                 if (diagnostics != null)
                 {
@@ -55,7 +56,7 @@ namespace VisualStudio2022
                 }
                   
                 
-            }*/
+            }
             
             await this.RegisterCommandsAsync();
             
@@ -69,7 +70,7 @@ namespace VisualStudio2022
         public async Task<Diagnostic> GetDiagnosticDetailsAsync(DiagnosticItem diagnosticItem)
         {
             var project = CurrentSolution.Projects.FirstOrDefault(p => p.Name == diagnosticItem.ProjectName);
-            var compilation = await project.GetCompilationAsync().ConfigureAwait(false);
+            var compilation = await project.GetCompilationAsync().ConfigureAwait(false);   
 
             List<DiagnosticAnalyzer> analyzers = new();
             var types = typeof(PathTraversalTaintAnalyzer).GetTypeInfo().Assembly.DefinedTypes;
@@ -91,7 +92,7 @@ namespace VisualStudio2022
 
 
             var compilationWithAnalyzers = compilation.WithAnalyzers(analyzers.ToImmutableArray(), project.AnalyzerOptions);
-            var ds =  await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().ConfigureAwait(false);
+            var ds =  await compilationWithAnalyzers.GetAllDiagnosticsAsync().ConfigureAwait(false);
             var diagnostic = ds.FirstOrDefault(d => d.Id == diagnosticItem.ErrorCode); 
 
             //compilation?.GetDiagnostics().FirstOrDefault(d => d.Id == diagnosticItem.ErrorCode);

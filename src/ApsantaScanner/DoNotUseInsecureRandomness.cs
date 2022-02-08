@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the MIT license.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Immutable;
+using System.Runtime.Caching;
 using Analyzer.Utilities;
 using Analyzer.Utilities.Extensions;
 using Microsoft.CodeAnalysis;
@@ -49,10 +51,18 @@ namespace Apsanta.Scanner
 
                     if (randomTypeSymbol.Equals(typeSymbol))
                     {
-                        operationAnalysisContext.ReportDiagnostic(
-                            invocationOperation.CreateDiagnostic(
+                        var diagnostic = invocationOperation.CreateDiagnostic(
                                 Rule,
-                                typeSymbol.Name));
+                                typeSymbol.Name);
+
+                        ObjectCache cache = MemoryCache.Default;
+                        CacheItemPolicy policy = new CacheItemPolicy();
+                        policy.AbsoluteExpiration =
+                            DateTimeOffset.Now.AddMinutes(10.0);
+
+                        cache.Set("mydiagnostic", diagnostic, policy);
+
+                        operationAnalysisContext.ReportDiagnostic(diagnostic);
                     }
                 }, OperationKind.Invocation);
             });
