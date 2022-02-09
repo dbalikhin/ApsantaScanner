@@ -149,6 +149,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="NetMQ">
+      <Version>4.0.1.8</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
@@ -175,6 +178,10 @@
     <ProjectReference Include="..\src\CredentialManagement\CredentialManagement.csproj">
       <Project>{fa07d02d-8e7c-4876-99fa-571c1256ef94}</Project>
       <Name>CredentialManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\src\SharedState\SharedState.csproj">
+      <Project>{C1F7FE41-0527-44E1-B480-7300D10BAAA8}</Project>
+      <Name>SharedState</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

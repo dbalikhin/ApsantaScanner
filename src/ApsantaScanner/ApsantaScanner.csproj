@@ -30,8 +30,7 @@
 	  <PackageReference Include="MSBuild.AssemblyVersion" Version="1.3.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	  <PackageReference Include="System.Runtime.Caching" Version="6.0.0" />
+	  </PackageReference>	 
 	  <PackageReference Include="YamlDotNet" Version="11.2.1" />
 	  <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>

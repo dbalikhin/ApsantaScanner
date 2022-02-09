@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.Caching;
+using System.Text;
 using System.Threading;
 using Analyzer.Utilities;
 using Analyzer.Utilities.Extensions;
@@ -49,6 +51,8 @@ namespace ApsantaScanner.Security
 
         public override void Initialize(AnalysisContext context)
         {
+            var s = "di";
+            Console.WriteLine(s);
             if (!Debugger.IsAttached)
                 context.EnableConcurrentExecution();
 
@@ -304,12 +308,39 @@ namespace ApsantaScanner.Security
                                                         sourceOrigin.AccessingMethod.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)});
                                                         operationBlockAnalysisContext.ReportDiagnostic(diagnostic);
 
-                                                        ObjectCache cache = MemoryCache.Default;
-                                                        CacheItemPolicy policy = new CacheItemPolicy();
-                                                        policy.AbsoluteExpiration =
-                                                            DateTimeOffset.Now.AddMinutes(10.0);
+                                                        /*
+                                                        string path = @"c:\temp\MyTest.txt";
+                                                        // This text is added only once to the file.
+                                                        if (!File.Exists(path))
+                                                        {
+                                                            // Create a file to write to.
+                                                            using (StreamWriter sw = File.CreateText(path))
+                                                            {
+                                                                sw.WriteLine(TaintedDataEnteringSinkDescriptor.Id);
+                                                                sw.WriteLine(TaintedDataEnteringSinkDescriptor.Category);
+                                                                sw.WriteLine(TaintedDataEnteringSinkDescriptor.Description);
+                                                                sw.WriteLine();
+                                                            }
+                                                        }
 
-                                                        cache.Set("mydiagnostic", diagnostic, policy);
+                                                        // This text is always added, making the file longer over time
+                                                        // if it is not deleted.
+                                                        using (StreamWriter sw = File.AppendText(path))
+                                                        {
+                                                            sw.WriteLine(TaintedDataEnteringSinkDescriptor.Id);
+                                                            sw.WriteLine(TaintedDataEnteringSinkDescriptor.Category);
+                                                            sw.WriteLine(TaintedDataEnteringSinkDescriptor.Description);
+                                                            sw.WriteLine();
+                                                        }
+                                                        */
+                                                        StringBuilder sb = new StringBuilder();
+                                                        sb.AppendLine(TaintedDataEnteringSinkDescriptor.Id);
+                                                        sb.AppendLine(TaintedDataEnteringSinkDescriptor.Category);                                                                                 
+                                                        sb.AppendLine();
+                                                        sb.AppendLine();
+                                                        MultiThreadFileWriter.Instance.WriteLine(sb.ToString());
+
+
                                                     }
                                      
                                                 }

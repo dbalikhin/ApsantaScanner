@@ -71,7 +71,9 @@ namespace VisualStudio2022
         {
             var project = CurrentSolution.Projects.FirstOrDefault(p => p.Name == diagnosticItem.ProjectName);
             var compilation = await project.GetCompilationAsync().ConfigureAwait(false);   
-
+            var diag = compilation?.GetDiagnostics().Where(d=> d.Severity != DiagnosticSeverity.Hidden).ToList();
+            var diagnostic = compilation?.GetDiagnostics().FirstOrDefault(d => d.Id == diagnosticItem.ErrorCode);
+            /*
             List<DiagnosticAnalyzer> analyzers = new();
             var types = typeof(PathTraversalTaintAnalyzer).GetTypeInfo().Assembly.DefinedTypes;
             foreach (var type in types)
@@ -95,8 +97,8 @@ namespace VisualStudio2022
             var ds =  await compilationWithAnalyzers.GetAllDiagnosticsAsync().ConfigureAwait(false);
             var diagnostic = ds.FirstOrDefault(d => d.Id == diagnosticItem.ErrorCode); 
 
-            //compilation?.GetDiagnostics().FirstOrDefault(d => d.Id == diagnosticItem.ErrorCode);
-
+            //D
+            */
             return diagnostic;
         }
     }
