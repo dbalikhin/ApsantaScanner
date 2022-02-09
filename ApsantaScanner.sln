@@ -32,8 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CredentialManagement", "src\CredentialManagement\CredentialManagement.csproj", "{FA07D02D-8E7C-4876-99FA-571C1256EF94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedState", "src\SharedState\SharedState.csproj", "{C1F7FE41-0527-44E1-B480-7300D10BAAA8}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		ApstantaScanner.Vsix.Shared\ApstantaScanner.Vsix.Shared.projitems*{1ba321f8-e4bc-4c67-bc8d-e24cf27be427}*SharedItemsImports = 4
@@ -108,14 +106,6 @@ Global
 		{FA07D02D-8E7C-4876-99FA-571C1256EF94}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FA07D02D-8E7C-4876-99FA-571C1256EF94}.Release|x86.ActiveCfg = Release|Any CPU
 		{FA07D02D-8E7C-4876-99FA-571C1256EF94}.Release|x86.Build.0 = Release|Any CPU
-		{C1F7FE41-0527-44E1-B480-7300D10BAAA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1F7FE41-0527-44E1-B480-7300D10BAAA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1F7FE41-0527-44E1-B480-7300D10BAAA8}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{C1F7FE41-0527-44E1-B480-7300D10BAAA8}.Debug|x86.Build.0 = Debug|Any CPU
-		{C1F7FE41-0527-44E1-B480-7300D10BAAA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1F7FE41-0527-44E1-B480-7300D10BAAA8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1F7FE41-0527-44E1-B480-7300D10BAAA8}.Release|x86.ActiveCfg = Release|Any CPU
-		{C1F7FE41-0527-44E1-B480-7300D10BAAA8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
