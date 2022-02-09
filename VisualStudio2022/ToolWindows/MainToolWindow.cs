@@ -3,9 +3,6 @@ using ApstantaScanner.Vsix.Shared.ErrorList;
 using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Imaging;
-using NetMQ;
-using NetMQ.Sockets;
-using SharedState;
 using System.Runtime.Caching;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -62,16 +59,7 @@ namespace VisualStudio2022
                     
                     if (navigatedItem != null)
                     {
-                        ObjectCache cache = MemoryCache.Default;
-                        CacheItemPolicy policy = new CacheItemPolicy();
-                        policy.AbsoluteExpiration =
-                            DateTimeOffset.Now.AddMinutes(10.0);
-
-                      
-                        string myloc = "ss";
-                        var l = StaticMother.Count();
-                        var o = StaticMother.Get(myloc);
-                        var ci = (Diagnostic)cache.Get(navigatedItem.DiagnosticItem.ErrorText);
+                       
                        // var d = ApsantaPackage.GetDiagnosticDetailsAsync(navigatedItem.DiagnosticItem).Result;
                         var report = GenerateReport(navigatedItem.DiagnosticItem);
                         (Content as MainToolWindowControl).UpdateBrowser(report);

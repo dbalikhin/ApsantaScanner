@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Immutable;
-using System.Runtime.Caching;
 using Analyzer.Utilities;
 using Analyzer.Utilities.Extensions;
 using Microsoft.CodeAnalysis;
@@ -54,13 +53,6 @@ namespace Apsanta.Scanner
                         var diagnostic = invocationOperation.CreateDiagnostic(
                                 Rule,
                                 typeSymbol.Name);
-
-                        ObjectCache cache = MemoryCache.Default;
-                        CacheItemPolicy policy = new CacheItemPolicy();
-                        policy.AbsoluteExpiration =
-                            DateTimeOffset.Now.AddMinutes(10.0);
-
-                        cache.Set("mydiagnostic", diagnostic, policy);
 
                         operationAnalysisContext.ReportDiagnostic(diagnostic);
                     }
