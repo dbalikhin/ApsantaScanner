@@ -30,6 +30,8 @@ namespace ApsantaScanner
             // TODO: Consider registering other actions that act on syntax instead of or in addition to symbols
             // See https://github.com/dotnet/roslyn/blob/main/docs/analyzers/Analyzer%20Actions%20Semantics.md for more information
             context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.NamedType);
+     
+           
         }
 
         private static void AnalyzeSymbol(SymbolAnalysisContext context)

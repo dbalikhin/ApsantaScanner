@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using ApsantaScanner.Security.Taint;
 using System.Reflection;
+using Microsoft.VisualStudio.Shell.Interop;
+
 
 namespace VisualStudio2022
 {
@@ -26,7 +28,7 @@ namespace VisualStudio2022
     [InstalledProductRegistration(Vsix.Name, Vsix.Description, Vsix.Version)]
     [ProvideToolWindow(typeof(MainToolWindow.Pane), Style = VsDockStyle.MDI, Transient = true)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string, PackageAutoLoadFlags.BackgroundLoad)]
+    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExistsAndFullyLoaded_string, PackageAutoLoadFlags.BackgroundLoad)]
     [ProvideToolWindowVisibility(typeof(MainToolWindow.Pane), VSConstants.UICONTEXT.SolutionExistsAndFullyLoaded_string)]
     [Guid(PackageGuids.VisualStudio2022String)]
     public sealed class VisualStudio2022Package : ToolkitPackage
@@ -34,8 +36,13 @@ namespace VisualStudio2022
         public Microsoft.CodeAnalysis.Solution CurrentSolution { get; private set; }
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            // https://github.com/microsoft/sarif-visualstudio-extension/blob/main/src/Sarif.Viewer.VisualStudio.Core/SarifViewerPackage.cs
             var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
             var workspace = (Workspace)componentModel.GetService<VisualStudioWorkspace>();
+            VS.Events.BuildEvents.SolutionBuildDone += BuildEvents_SolutionBuildDone;
+
+
+
             CurrentSolution = workspace.CurrentSolution;
 
             AuthServiceInstance = new AuthService();
@@ -63,6 +70,47 @@ namespace VisualStudio2022
 
 
             this.RegisterToolWindows();
+        }
+
+        private void BuildEvents_SolutionBuildDone(bool obj)
+        {
+            var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
+            var workspace = (Workspace)componentModel.GetService<VisualStudioWorkspace>();
+            var ss = workspace.CurrentSolution.AnalyzerReferences;
+            var s = workspace.Services.PersistentStorage.GetStorage(workspace.CurrentSolution);
+
+            foreach (var project in workspace.CurrentSolution.Projects)
+            {
+
+                var compilation = await project.GetCompilationAsync().Result;
+
+                var diagnostics = compilation?.GetDiagnostics().Where(d => d.Severity != DiagnosticSeverity.Hidden);
+                if (diagnostics != null)
+                {
+                    foreach (var diagnostic in diagnostics)
+                    {
+                        //diagnostic.Location.GetMappedLineSpan().
+                    }
+                }
+
+
+            }
+
+        }
+
+        // https://github.com/microsoft/VSSDK-Extensibility-Samples/blob/master/SolutionLoadEvents/README.md
+        private async Task<bool> IsSolutionLoadedAsync()
+        {
+            await JoinableTaskFactory.SwitchToMainThreadAsync();
+            var solService = await GetServiceAsync(typeof(SVsSolution)) as IVsSolution;
+
+            ErrorHandler.ThrowOnFailure(solService.GetProperty((int)__VSPROPID.VSPROPID_IsSolutionOpen, out object value));
+
+            return value is bool isSolOpen && isSolOpen;
+        }
+
+        private void HandleOpenSolution(object sender = null, EventArgs e = null)
+        {
         }
 
         public AuthService AuthServiceInstance { get; private set; }

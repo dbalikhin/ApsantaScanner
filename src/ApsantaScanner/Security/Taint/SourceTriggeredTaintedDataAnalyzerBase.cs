@@ -336,7 +336,7 @@ namespace ApsantaScanner.Security
                                                         sb.AppendLine(TaintedDataEnteringSinkDescriptor.Category);                                                                                 
                                                         sb.AppendLine();
                                                         sb.AppendLine();
-                                                        MultiThreadFileWriter.Instance.WriteLine(sb.ToString());
+                                                        //MultiThreadFileWriter.Instance.WriteLine(sb.ToString());
 
 
                                                     }
