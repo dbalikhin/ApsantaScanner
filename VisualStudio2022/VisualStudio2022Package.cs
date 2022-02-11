@@ -40,7 +40,7 @@ namespace VisualStudio2022
             var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
             var workspace = (Workspace)componentModel.GetService<VisualStudioWorkspace>();
             VS.Events.BuildEvents.SolutionBuildDone += BuildEvents_SolutionBuildDone;
-
+            
 
 
             CurrentSolution = workspace.CurrentSolution;
@@ -76,13 +76,40 @@ namespace VisualStudio2022
         {
             var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
             var workspace = (Workspace)componentModel.GetService<VisualStudioWorkspace>();
-            var ss = workspace.CurrentSolution.AnalyzerReferences;
-            var s = workspace.Services.PersistentStorage.GetStorage(workspace.CurrentSolution);
+            var ar = workspace.CurrentSolution.AnalyzerReferences;
+            var apsantaAnalyzer = ar.FirstOrDefault(a => (a.Id as AssemblyIdentity)?.Name == "ApsantaScanner");
 
             foreach (var project in workspace.CurrentSolution.Projects)
             {
 
-                var compilation = await project.GetCompilationAsync().Result;
+                var compilation = project.GetCompilationAsync().Result;
+
+                List<DiagnosticAnalyzer> analyzers = new();
+                var types = typeof(PathTraversalTaintAnalyzer).GetTypeInfo().Assembly.DefinedTypes;
+                foreach (var type in types)
+                {
+                    if (type.IsAbstract)
+                        continue;
+
+                    var secAttributes = type.GetCustomAttributes(typeof(DiagnosticAnalyzerAttribute), false)
+                                                .Cast<DiagnosticAnalyzerAttribute>();
+                    foreach (var attribute in secAttributes)
+                    {
+                        var analyzer = (DiagnosticAnalyzer)Activator.CreateInstance(type.AsType());
+
+                        analyzers.Add(analyzer);
+                        break;
+                    }
+                }
+                var compilationWithAnalyzers = compilation.WithAnalyzers(apsantaAnalyzer.GetAnalyzersForAllLanguages(), project.AnalyzerOptions);
+                var ds = compilationWithAnalyzers.GetAllDiagnosticsAsync().Result.Where(d=>d.Severity == DiagnosticSeverity.Warning);
+                var diagnostic2 = ds.FirstOrDefault(d => d.Id == "SCS0002");
+
+                /* compilation.WithAnalyzers()
+     .WithAnalyzers(Compiler.Analyzers)
+     .GetAllDiagnosticsAsync().Result
+     .Where(d => d.Severity == DiagnosticSeverity.Error && !d.Id.StartsWith("CS"))
+     .ToArray();*/
 
                 var diagnostics = compilation?.GetDiagnostics().Where(d => d.Severity != DiagnosticSeverity.Hidden);
                 if (diagnostics != null)
