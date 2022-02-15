@@ -75,18 +75,15 @@ namespace VisualStudio2022
                 StringBuilder sb = new();
                 sb.AppendLine("## SQL Injection")
                   .AppendLine("")
-                  .AppendLine("ErrorText: " + diag.ErrorText)
+                  .AppendLine("ErrorText: " + diag.ErrorTitle)
                   .AppendLine("")
                   .AppendLine("ErrorCode: " + diag.ErrorCode)
                   .AppendLine("")
                   .AppendLine("Line: " + diag.Line.ToString())
                   .AppendLine("")
                   .AppendLine("```csharp")
-                  .AppendLine("")
-                  .AppendLine("public void Do(int i)")
-                  .AppendLine("")
-                  .AppendLine("```")
-                  .AppendLine("");
+                  .AppendLine(diag.ErrorDescription)
+                  .AppendLine("```");
 
                 return sb.ToString();
             }

@@ -288,22 +288,34 @@ namespace ApsantaScanner.Security
                                                         // prepare a list of addional locations starting from the source
                                                         var additionalLocations = new Location[taintedOperations.Count + 1];
                                                         additionalLocations[0] = sourceOrigin.Location;
+                                                        var sb = new StringBuilder();
+                                                        
                                                         for (int i = 0; i < taintedOperations.Count; i++)
                                                         {
                                                             additionalLocations[i + 1] = taintedOperations[i].Syntax.GetLocation();
+                                                            sb.AppendLine(taintedOperations[i].Syntax.ToFullString());
                                                         }
+
+                                                        var messageArgs = new object[4 + additionalLocations.Length];
+                                                        messageArgs[0] = sourceSink.Sink.Symbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+                                                        messageArgs[1] = sourceSink.Sink.AccessingMethod.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+                                                        messageArgs[2] = sourceOrigin.Symbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+                                                        messageArgs[3] = sourceOrigin.AccessingMethod.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+
+               
+                                                        // multiple arguments for additional locations but it is unclear how to use in a static message file
+                                                        // messageArgs[i + 4] = additionalLocations[i].SourceTree.GetText().GetSubText(additionalLocations[i].SourceSpan).ToString();
+
+
+                                                        var dd = new DiagnosticDescriptor(TaintedDataEnteringSinkDescriptor.Id, TaintedDataEnteringSinkDescriptor.Title, TaintedDataEnteringSinkDescriptor.MessageFormat, TaintedDataEnteringSinkDescriptor.Category, TaintedDataEnteringSinkDescriptor.DefaultSeverity, TaintedDataEnteringSinkDescriptor.IsEnabledByDefault, sb.ToString());
 
                                                         // Something like:
                                                         // CA3001: Potential SQL injection vulnerability was found where '{0}' in method '{1}' may be tainted by user-controlled data from '{2}' in method '{3}'.
                                                         Diagnostic diagnostic = Diagnostic.Create(
-                                                            TaintedDataEnteringSinkDescriptor,
+                                                            dd,
                                                             sourceSink.Sink.Location,
                                                             additionalLocations: additionalLocations,
-                                                            messageArgs: new object[] {
-                                                        sourceSink.Sink.Symbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat),
-                                                        sourceSink.Sink.AccessingMethod.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat),
-                                                        sourceOrigin.Symbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat),
-                                                        sourceOrigin.AccessingMethod.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)});
+                                                            messageArgs: messageArgs);
                                                         operationBlockAnalysisContext.ReportDiagnostic(diagnostic);
 
                                                         /*
@@ -331,13 +343,10 @@ namespace ApsantaScanner.Security
                                                             sw.WriteLine();
                                                         }
                                                         */
-                                                        StringBuilder sb = new StringBuilder();
-                                                        sb.AppendLine(TaintedDataEnteringSinkDescriptor.Id);
-                                                        sb.AppendLine(TaintedDataEnteringSinkDescriptor.Category);                                                                                 
-                                                        sb.AppendLine();
-                                                        sb.AppendLine();
-                                                        //MultiThreadFileWriter.Instance.WriteLine(sb.ToString());
 
+                                                        //MultiThreadFileWriter.Instance.WriteLine(sb.ToString());
+                                                        DiagnosticResults.AddDiagnostic(diagnostic);
+                                                        DiagnosticResults.WriteToFile();
 
                                                     }
                                      

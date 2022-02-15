@@ -20,9 +20,26 @@ namespace ApsantaScanner
             _diagnosticQueue.Enqueue(diagnostic.Id);
         }
 
+        public static void AddEntry(string entry)
+        {
+            _diagnosticQueue.Enqueue(entry);
+        }
+
+        public static int Count => _diagnosticQueue.Count;
+
         public static async Task WriteToFileAsync()
         {
-            string path = @"c:\temp\MyTest.txt";
+            var rootDirectory = StaticMother.TryGetSolutionDirectoryInfo();
+            if (rootDirectory == null)
+            {
+                // something is wrong, clear the queue and exit
+                _diagnosticQueue = new ConcurrentQueue<string>();
+                return;
+            }
+
+            string path = Path.Combine(rootDirectory.FullName, ".apsanta", "current");
+            Directory.CreateDirectory(path);
+            string filename = Path.Combine(path, ".results");
 
             // Create a file to write to.
             using (StreamWriter sw = File.CreateText(path))
@@ -38,10 +55,20 @@ namespace ApsantaScanner
 
         public static void WriteToFile()
         {
-            string path = @"c:\temp\MyTest.txt";
+            var rootDirectory = StaticMother.TryGetSolutionDirectoryInfo();
+            if (rootDirectory == null)
+            {
+                // something is wrong, clear the queue and exit
+                _diagnosticQueue = new ConcurrentQueue<string>();
+                return;
+            }
+
+            string path = Path.Combine(rootDirectory.FullName, ".apsanta", "current");
+            Directory.CreateDirectory(path);
+            string filename = Path.Combine(path, ".results");
 
             // Create a file to write to.
-            using (StreamWriter sw = File.CreateText(path))
+            using (StreamWriter sw = File.CreateText(filename))
             {
                 while (_diagnosticQueue.TryDequeue(out string textLine))
                 {

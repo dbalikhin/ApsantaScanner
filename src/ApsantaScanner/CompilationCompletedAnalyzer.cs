@@ -59,7 +59,7 @@ namespace ApsantaScanner
     public class CompilationDummyAnalyzer : DiagnosticAnalyzer
     {
         public static DiagnosticDescriptor CompilationEndDiagnostic =
-            new DiagnosticDescriptor("APS00000", "Completed", "Apsanta Analysis Completed in {0} ms", "Security", DiagnosticSeverity.Info, isEnabledByDefault: true);
+            new DiagnosticDescriptor("APS00000", "Completed", "Apsanta Analysis Completed in {0} ms", "Security", DiagnosticSeverity.Info, isEnabledByDefault: true, "This is my descrition: {0} ms.");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(CompilationEndDiagnostic); 
     
@@ -73,9 +73,8 @@ namespace ApsantaScanner
 
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 
-            
             context.RegisterCompilationStartAction(ctx =>
-            {      
+            {    
                 ctx.RegisterCompilationEndAction(ctx2 => 
                 {
                     timer.Stop();
@@ -83,6 +82,21 @@ namespace ApsantaScanner
                     
                     ctx2.ReportDiagnostic(Diagnostic.Create(CompilationEndDiagnostic, Location.None, timer.ElapsedMilliseconds));
                 });
+
+                int currentCount = DiagnosticResults.Count;
+                                
+                do
+                {
+                    Thread.Sleep(500);
+                    currentCount = DiagnosticResults.Count;
+
+                } while (currentCount != DiagnosticResults.Count);
+
+
+                // got all diagnostics
+                timer.Stop();
+                DiagnosticResults.AddEntry("Completed in: " + timer.ElapsedMilliseconds);
+                DiagnosticResults.WriteToFile();
             }); 
         }
     }

@@ -181,15 +181,15 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
 
             entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.Text, out var text);
             entryHandle.TryGetValue<int>(StandardTableColumnDefinitions.Line, out var line);
-            entryHandle.TryGetValue<int>(StandardTableColumnDefinitions.Column, out var column);
+            entryHandle.TryGetValue<int>(StandardTableColumnDefinitions.Column, out var column);            
             entryHandle.TryGetValue<string>(StandardTableColumnDefinitions.ProjectName, out var projectName);
-            
+           
             errorListItem = new ErrorListItem()
             {
                 DiagnosticItem = new DiagnosticItem()
                 {
                     ErrorCode = code,
-                    ErrorText = text,
+                    ErrorTitle = text,
                     Line = line,
                     Column = column,
                     ProjectName = projectName,

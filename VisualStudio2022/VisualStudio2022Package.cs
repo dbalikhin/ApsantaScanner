@@ -18,7 +18,8 @@ using System.Collections.Immutable;
 using ApsantaScanner.Security.Taint;
 using System.Reflection;
 using Microsoft.VisualStudio.Shell.Interop;
-
+using EnvDTE80;
+using EnvDTE;
 
 namespace VisualStudio2022
 {
@@ -39,15 +40,21 @@ namespace VisualStudio2022
             // https://github.com/microsoft/sarif-visualstudio-extension/blob/main/src/Sarif.Viewer.VisualStudio.Core/SarifViewerPackage.cs
             var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
             var workspace = (Workspace)componentModel.GetService<VisualStudioWorkspace>();
-            VS.Events.BuildEvents.SolutionBuildDone += BuildEvents_SolutionBuildDone;
-            
 
+            //await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            //VS.Events.BuildEvents.SolutionBuildDone += BuildEvents_SolutionBuildDone;
+
+            //https://github.com/dotnet/roslyn/blob/07c890cb76d8e62fa29553c84a23896feec3b78b/src/VisualStudio/Core/Impl/RoslynVisualStudioWorkspace.cs#L56
+            // https://github.com/dotnet/roslyn/blob/07c890cb76d8e62fa29553c84a23896feec3b78b/src/VisualStudio/Core/Impl/CodeModel/FileCodeModel.cs#L284
+            //https://github.com/dotnet/roslyn/blob/07c890cb76d8e62fa29553c84a23896feec3b78b/src/VisualStudio/Core/Def/Implementation/ProjectSystem/InvisibleEditor.cs
+            //var _invisibleEditor = Workspace.OpenInvisibleEditor(GetDocumentId());
 
             CurrentSolution = workspace.CurrentSolution;
 
             AuthServiceInstance = new AuthService();
-
             
+
+            /*
             foreach (var project in workspace.CurrentSolution.Projects)
             {
                 
@@ -64,6 +71,7 @@ namespace VisualStudio2022
                   
                 
             }
+            */
             
             await this.RegisterCommandsAsync();
             
@@ -72,8 +80,23 @@ namespace VisualStudio2022
             this.RegisterToolWindows();
         }
 
+        private void BuildEvents_SolutionBuildDone2(bool obj)
+        {
+            DTE2 dte2 = Package.GetGlobalService(typeof(DTE)) as DTE2;
+            //dte2.ExecuteCommand("View.ErrorList", " ");
+            IList<string> errors = new List<string>();
+            //Can get complete list.
+            ErrorList errorList = dte2.ToolWindows.ErrorList;
+            var errorItems = dte2.ToolWindows.ErrorList.ErrorItems;
+            //Below line does not work and always returns null.
+            var item = dte2.ToolWindows.ErrorList.SelectedItems;
+            var item2 = errorItems.Item;
+
+
+        }
         private void BuildEvents_SolutionBuildDone(bool obj)
         {
+            
             var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
             var workspace = (Workspace)componentModel.GetService<VisualStudioWorkspace>();
             var ar = workspace.CurrentSolution.AnalyzerReferences;
@@ -81,7 +104,7 @@ namespace VisualStudio2022
 
             foreach (var project in workspace.CurrentSolution.Projects)
             {
-
+                
                 var compilation = project.GetCompilationAsync().Result;
 
                 List<DiagnosticAnalyzer> analyzers = new();
@@ -102,8 +125,9 @@ namespace VisualStudio2022
                     }
                 }
                 var compilationWithAnalyzers = compilation.WithAnalyzers(apsantaAnalyzer.GetAnalyzersForAllLanguages(), project.AnalyzerOptions);
-                var ds = compilationWithAnalyzers.GetAllDiagnosticsAsync().Result.Where(d=>d.Severity == DiagnosticSeverity.Warning);
-                var diagnostic2 = ds.FirstOrDefault(d => d.Id == "SCS0002");
+                var ds2 = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(apsantaAnalyzer.GetAnalyzersForAllLanguages(), default(CancellationToken)).Result;
+                //var ds = compilationWithAnalyzers.GetAllDiagnosticsAsync().Result.Where(d=>d.Severity == DiagnosticSeverity.Warning);
+                var diagnostic2 = ds2.FirstOrDefault(d => d.Id == "SCS0002");
 
                 /* compilation.WithAnalyzers()
      .WithAnalyzers(Compiler.Analyzers)
