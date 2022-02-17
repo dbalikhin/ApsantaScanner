@@ -49,8 +49,6 @@ namespace ApsantaScanner.Security
 
         public override void Initialize(AnalysisContext context)
         {
-            var s = "di";
-            Console.WriteLine(s);
             if (!Debugger.IsAttached)
                 context.EnableConcurrentExecution();
 
@@ -243,7 +241,7 @@ namespace ApsantaScanner.Security
                                                     return;
                                                 }
 
-                                                
+
 
                                                 foreach (TaintedDataSourceSink sourceSink in taintedDataAnalysisResult.TaintedDataSourceSinks)
                                                 {
@@ -252,34 +250,52 @@ namespace ApsantaScanner.Security
                                                         continue;
                                                     }
 
+                                                    // https://github.com/dotnet/roslyn-analyzers/blob/main/docs/Writing%20dataflow%20analysis%20based%20analyzers.md
 
                                                     foreach (SymbolAccess sourceOrigin in sourceSink.SourceOrigins)
                                                     {
-                                                        var initialTaintedOperations = taintedDataAnalysisResult.GetTaintedOperations();
+                                                        var initialTaintedOperations = taintedDataAnalysisResult.GetTaintedOperations(sourceOrigin);
                                                         List<IOperation> taintedOperations = new();
-                                                        AddCurrentLevelResults(initialTaintedOperations, taintedDataAnalysisResult);
+                                                        AddCurrentLevelResults(initialTaintedOperations, taintedDataAnalysisResult, sourceSink);
 
 
 
-                                                        void AddCurrentLevelResults(List<IOperation> operations, DataFlowAnalysisResult<TaintedDataBlockAnalysisResult, TaintedDataAbstractValue> taintedResult)
+                                                        void AddCurrentLevelResults(List<IOperation> operations, DataFlowAnalysisResult<TaintedDataBlockAnalysisResult, TaintedDataAbstractValue> taintedResult, TaintedDataSourceSink sourceSink)
                                                         {
+                                                            var invocationOperation = operations.FirstOrDefault(op => op.Kind is OperationKind.Invocation or OperationKind.DynamicInvocation);
+                                                            var downLevelExpression = invocationOperation?.Parent;
+
+                                                            var topLevelExpressions = operations.Where(o => o.Kind == OperationKind.ExpressionStatement && o.Parent == null && o != downLevelExpression);
+                                                            
+                                                            var topLevelSink = topLevelExpressions.FirstOrDefault(o => o.Syntax.GetLocation().SourceSpan.OverlapsWith(sourceSink.Sink.Location.SourceSpan));
+                                                            if (topLevelSink != null)
+                                                            {
+                                                                // no need to check further
+                                                                taintedOperations.Add(topLevelSink);
+                                                                return;
+                                                            }
+
                                                             // add results from the current method
-                                                            taintedOperations.AddRange(operations.Where(i => i.Parent == null));
+                                                            taintedOperations.AddRange(operations.Where(i => i.Parent == null).Except(topLevelExpressions));
+                                                            
+                                                            // if it is the wrong sink - remove it (what to do with SimpleAssignment tracking?)
+                                                            
+                                                            // taintedOperations.Remove(operations.FirstOrDefault(o => o.Kind == OperationKind.ExpressionStatement && o.Syntax.GetLocation() == sourceSink.Sink.Location));
                                                             // assume there is only a single invocation in a method that leads from the specific source to the sink
-                                                            var invocation = operations.FirstOrDefault(op => op.Kind is OperationKind.Invocation or OperationKind.DynamicInvocation);
-                                                            if (invocation == null)
+                                                            
+                                                            if (invocationOperation == null)
                                                             {
                                                                 // need to exit earlier?
                                                             }
 
                                                             if (taintedResult.InterproceduralResultAvailable())
                                                             {
-                                                                var r = taintedResult.TryGetInterproceduralResult(invocation);
+                                                                var r = taintedResult.TryGetInterproceduralResult(invocationOperation);
                                                                 if (r != null)
                                                                 {
-                                                                    var taintedOps = r.GetTaintedOperations();
+                                                                    var taintedOps = r.GetTaintedOperations(sourceOrigin);
 
-                                                                    AddCurrentLevelResults(taintedOps, r);
+                                                                    AddCurrentLevelResults(taintedOps, r, sourceSink);
                                                                 }
                                                             }
 
@@ -289,7 +305,7 @@ namespace ApsantaScanner.Security
                                                         var additionalLocations = new Location[taintedOperations.Count + 1];
                                                         additionalLocations[0] = sourceOrigin.Location;
                                                         var sb = new StringBuilder();
-                                                        
+
                                                         for (int i = 0; i < taintedOperations.Count; i++)
                                                         {
                                                             additionalLocations[i + 1] = taintedOperations[i].Syntax.GetLocation();
@@ -302,7 +318,10 @@ namespace ApsantaScanner.Security
                                                         messageArgs[2] = sourceOrigin.Symbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
                                                         messageArgs[3] = sourceOrigin.AccessingMethod.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
 
-               
+                                                        for (int i = 0; i < additionalLocations.Length; i++)
+                                                        {
+                                                            messageArgs[i + 4] = additionalLocations[i].SourceTree.GetText().GetSubText(additionalLocations[i].SourceSpan).ToString();
+                                                        }
                                                         // multiple arguments for additional locations but it is unclear how to use in a static message file
                                                         // messageArgs[i + 4] = additionalLocations[i].SourceTree.GetText().GetSubText(additionalLocations[i].SourceSpan).ToString();
 
@@ -346,10 +365,9 @@ namespace ApsantaScanner.Security
 
                                                         //MultiThreadFileWriter.Instance.WriteLine(sb.ToString());
                                                         DiagnosticResults.AddDiagnostic(diagnostic);
-                                                        DiagnosticResults.WriteToFile();
-
+                                   
                                                     }
-                                     
+
                                                 }
                                             }
                                         }
@@ -363,4 +381,5 @@ namespace ApsantaScanner.Security
                 });
         }
     }
+
 }
