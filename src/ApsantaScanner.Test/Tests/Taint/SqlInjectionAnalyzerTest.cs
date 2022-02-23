@@ -466,9 +466,7 @@ namespace sample
     {{
         public void Run(string input, params object[] parameters)
         {{
-            int ao1 = 1;
-            new SQLiteCommand(input);
-            var ao2 = ao1 + 3;
+            var ao2 = 3;
             DoStuff(input);
             var ao3 = ao2 + 4;
         }}
@@ -492,6 +490,49 @@ namespace sample
             new SQLiteCommand(sql);
             var sql2 = internalStuffInput;
             new SQLiteCommand(sql2);
+        }}
+    }}
+}}
+";
+                var expected = new DiagnosticResult
+                {
+                    Id = "SCS0002",
+                    Severity = DiagnosticSeverity.Warning,
+                };
+                await VerifyCSharpDiagnostic(cSharpTest, expected).ConfigureAwait(false);
+
+            }
+
+            [TestMethod]
+            public async Task MySqlInjection3()
+            {
+                var cSharpTest = $@"
+#pragma warning disable 8019
+    using System;
+    using System.Data.SqlClient;
+    using System.Data.Common;
+    using System.Data;
+    using System.Web.UI.WebControls;
+    using System.Data.Entity;
+    using System.Threading;
+    using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
+    using System.Data.SQLite;
+    using System.Web.Mvc;
+#pragma warning restore 8019
+
+namespace sample
+{{
+    public class MyFooController : Controller
+    {{
+        public void Run(string usernameOriginal, params object[] parameters)
+        {{
+            DoStuff(usernameOriginal);  
+        }}
+
+        private void DoStuff(string username)
+        {{
+            var sql = ""select * from users where username= "" + username;
+            new SQLiteCommand(sql);
         }}
     }}
 }}

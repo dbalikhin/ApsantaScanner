@@ -146,13 +146,13 @@ namespace Microsoft.CodeAnalysis.FlowAnalysis.DataFlow
             return _interproceduralResultsMap.Count > 0;
         }
 
-        internal List<IOperation> GetTaintedOperations(SymbolAccess sourceOrigin)
+        internal List<IOperation> GetTaintedOperations()
         {
 
             List<IOperation> list = new();
             foreach (var kvp in _operationStateMap)
             {
-                if ((kvp.Value as TaintedDataAbstractValue).Kind == TaintedDataAbstractValueKind.Tainted && (kvp.Value as TaintedDataAbstractValue).SourceOrigins.Contains(sourceOrigin))
+                if ((kvp.Value as TaintedDataAbstractValue).Kind == TaintedDataAbstractValueKind.Tainted)
                 {
                     list.Add(kvp.Key);
                 }
