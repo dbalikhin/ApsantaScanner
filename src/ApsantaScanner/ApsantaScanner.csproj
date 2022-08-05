@@ -31,6 +31,7 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
+	  <PackageReference Include="System.Text.Json" Version="6.0.2" />	 
 	  <PackageReference Include="YamlDotNet" Version="11.2.1" />
 	  <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>

@@ -1,22 +1,19 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using ApstantaScanner.Vsix.Shared.ErrorList;
 using System.ComponentModel;
 
 namespace ApsantaScanner.Vsix.Shared.ErrorList
 {
     internal class ErrorListItem : NotifyPropertyChangedObject, IDisposable
     {
-        /// <summary>
-        /// Contains the result Id that will be incremented and assigned to new instances of <see cref="SarifErrorListItem"/>.
-        /// </summary>
-        private static int currentResultId;
 
         private string _selectedTab;
 
         private bool isDisposed;
 
-
+        internal DiagnosticItem DiagnosticItem { get; set; }
 
         internal ErrorListItem()
         {

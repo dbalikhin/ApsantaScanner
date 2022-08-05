@@ -25,7 +25,32 @@
       "ProjectGuid": "31aa94cd-1b9f-4725-8d60-22a665a31cda",
       "DisplayName": "MsUnit",
       "ColorIndex": 4
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "585ec2ad-fdd9-49ce-a843-78987847820b": {
+      "ProjectGuid": "585ec2ad-fdd9-49ce-a843-78987847820b",
+      "DisplayName": "ApstantaScanner.Vsix.Shared",
+      "ColorIndex": 5
+    },
+    "1ba321f8-e4bc-4c67-bc8d-e24cf27be427": {
+      "ProjectGuid": "1ba321f8-e4bc-4c67-bc8d-e24cf27be427",
+      "DisplayName": "VisualStudio2022",
+      "ColorIndex": 6
+    },
+    "7c177919-a682-45c0-82f7-6eb33b669108": {
+      "ProjectGuid": "7c177919-a682-45c0-82f7-6eb33b669108",
+      "DisplayName": "Solution Items",
+      "ColorIndex": 7
+    },
+    "fa07d02d-8e7c-4876-99fa-571c1256ef94": {
+      "ProjectGuid": "fa07d02d-8e7c-4876-99fa-571c1256ef94",
+      "DisplayName": "CredentialManagement",
+      "ColorIndex": 8
     }
   },
-  "NextColorIndex": 5
+  "NextColorIndex": 9
 }

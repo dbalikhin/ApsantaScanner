@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the MIT license.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Immutable;
 using Analyzer.Utilities;
 using Analyzer.Utilities.Extensions;
@@ -21,7 +22,7 @@ namespace Apsanta.Scanner
             "DoNotUseInsecureRandomness",
             "DoNotUseInsecureRandomness",
             DiagnosticCategory.Security,
-            RuleLevel.Disabled,
+            RuleLevel.BuildWarning,
             description: "DoNotUseInsecureRandomness",
             isPortedFxCopRule: false,
             isDataflowRule: false);
@@ -49,10 +50,11 @@ namespace Apsanta.Scanner
 
                     if (randomTypeSymbol.Equals(typeSymbol))
                     {
-                        operationAnalysisContext.ReportDiagnostic(
-                            invocationOperation.CreateDiagnostic(
+                        var diagnostic = invocationOperation.CreateDiagnostic(
                                 Rule,
-                                typeSymbol.Name));
+                                typeSymbol.Name);
+
+                        operationAnalysisContext.ReportDiagnostic(diagnostic);
                     }
                 }, OperationKind.Invocation);
             });

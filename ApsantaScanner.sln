@@ -25,6 +25,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudio2022", "VisualS
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ApstantaScanner.Vsix.Shared", "ApstantaScanner.Vsix.Shared\ApstantaScanner.Vsix.Shared.shproj", "{585EC2AD-FDD9-49CE-A843-78987847820B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7C177919-A682-45C0-82F7-6EB33B669108}"
+	ProjectSection(SolutionItems) = preProject
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CredentialManagement", "src\CredentialManagement\CredentialManagement.csproj", "{FA07D02D-8E7C-4876-99FA-571C1256EF94}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		ApstantaScanner.Vsix.Shared\ApstantaScanner.Vsix.Shared.projitems*{1ba321f8-e4bc-4c67-bc8d-e24cf27be427}*SharedItemsImports = 4
@@ -91,6 +98,14 @@ Global
 		{1BA321F8-E4BC-4C67-BC8D-E24CF27BE427}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1BA321F8-E4BC-4C67-BC8D-E24CF27BE427}.Release|x86.ActiveCfg = Release|x86
 		{1BA321F8-E4BC-4C67-BC8D-E24CF27BE427}.Release|x86.Build.0 = Release|x86
+		{FA07D02D-8E7C-4876-99FA-571C1256EF94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA07D02D-8E7C-4876-99FA-571C1256EF94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA07D02D-8E7C-4876-99FA-571C1256EF94}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FA07D02D-8E7C-4876-99FA-571C1256EF94}.Debug|x86.Build.0 = Debug|Any CPU
+		{FA07D02D-8E7C-4876-99FA-571C1256EF94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA07D02D-8E7C-4876-99FA-571C1256EF94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA07D02D-8E7C-4876-99FA-571C1256EF94}.Release|x86.ActiveCfg = Release|Any CPU
+		{FA07D02D-8E7C-4876-99FA-571C1256EF94}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

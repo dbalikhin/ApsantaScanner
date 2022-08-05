@@ -443,6 +443,109 @@ namespace sample
 
             }
 
+            [TestMethod]
+            public async Task MySqlInjection2()
+            {
+                var cSharpTest = $@"
+#pragma warning disable 8019
+    using System;
+    using System.Data.SqlClient;
+    using System.Data.Common;
+    using System.Data;
+    using System.Web.UI.WebControls;
+    using System.Data.Entity;
+    using System.Threading;
+    using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
+    using System.Data.SQLite;
+    using System.Web.Mvc;
+#pragma warning restore 8019
+
+namespace sample
+{{
+    public class MyFooController : Controller
+    {{
+        public void Run(string input, params object[] parameters)
+        {{
+            var ao2 = 3;
+            DoStuff(input);
+            var ao3 = ao2 + 4;
+        }}
+
+        private void DoStuff(string stuffInput)
+        {{
+
+            int oo1 = 1;
+            var oo2 = oo1 + 3;
+            if (stuffInput != null)
+                DoInternalStuff(stuffInput);
+            
+            
+        }}
+
+        private void DoInternalStuff(string internalStuffInput)
+        {{
+            int io1 = 1;
+            var io2 = io1 + 3;
+            var sql = io2.ToString() + internalStuffInput;
+            new SQLiteCommand(sql);
+            var sql2 = internalStuffInput;
+            new SQLiteCommand(sql2);
+        }}
+    }}
+}}
+";
+                var expected = new DiagnosticResult
+                {
+                    Id = "SCS0002",
+                    Severity = DiagnosticSeverity.Warning,
+                };
+                await VerifyCSharpDiagnostic(cSharpTest, expected).ConfigureAwait(false);
+
+            }
+
+            [TestMethod]
+            public async Task MySqlInjection3()
+            {
+                var cSharpTest = $@"
+#pragma warning disable 8019
+    using System;
+    using System.Data.SqlClient;
+    using System.Data.Common;
+    using System.Data;
+    using System.Web.UI.WebControls;
+    using System.Data.Entity;
+    using System.Threading;
+    using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
+    using System.Data.SQLite;
+    using System.Web.Mvc;
+#pragma warning restore 8019
+
+namespace sample
+{{
+    public class MyFooController : Controller
+    {{
+        public void Run(string usernameOriginal, params object[] parameters)
+        {{
+            DoStuff(usernameOriginal);  
+        }}
+
+        private void DoStuff(string username)
+        {{
+            var sql = ""select * from users where username= "" + username;
+            new SQLiteCommand(sql);
+        }}
+    }}
+}}
+";
+                var expected = new DiagnosticResult
+                {
+                    Id = "SCS0002",
+                    Severity = DiagnosticSeverity.Warning,
+                };
+                await VerifyCSharpDiagnostic(cSharpTest, expected).ConfigureAwait(false);
+
+            }
+
             [DataRow("new DbContext(\"connectionString\").Database.ExecuteSqlCommandAsync(input, parameters)", true, "SCS0002")]
             [DataRow("new DbContext(\"connectionString\").Database.ExecuteSqlCommandAsync(\"select\", parameters)", false, null)]
             [DataRow("new DbContext(\"connectionString\").Database.ExecuteSqlCommandAsync(TransactionalBehavior.DoNotEnsureTransaction, input, parameters)", true, "SCS0002")]

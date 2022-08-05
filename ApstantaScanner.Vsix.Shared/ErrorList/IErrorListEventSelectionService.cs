@@ -8,7 +8,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
 {
     /// <summary>
     /// Service interface that transforms the selections and navigations from Visual Studio's error list into selections
-    /// of <see cref="SarifErrorListItem"/> items that the rest of the extension can leverage.
+    /// of <see cref="ErrorListItem"/> items that the rest of the extension can leverage.
     /// </summary>
     /// <remarks>
     /// A "navigated item" is one that a user "double clicked on" in the Error list, and a "selected item" is one that the user "single clicked" on in the error list.
@@ -17,7 +17,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
     internal interface IErrorListEventSelectionService
     {
         /// <summary>
-        /// Gets or sets the currently selected <see cref="SarifErrorListItem"/>.
+        /// Gets or sets the currently selected <see cref="ErrorListItem"/>.
         /// </summary>
         /// <remarks>
         /// May be null.
@@ -25,7 +25,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
         ErrorListItem SelectedItem { get; set; }
 
         /// <summary>
-        /// Gets the list of selected <see cref="SarifErrorListItem"/> in error list.
+        /// Gets the list of selected <see cref="ErrorListItem"/> in error list.
         /// </summary>
         /// <remarks>
         /// May be null.
@@ -38,7 +38,7 @@ namespace ApsantaScanner.Vsix.Shared.ErrorList
         event EventHandler<ErrorListSelectionChangedEventArgs> SelectedItemChanged;
 
         /// <summary>
-        /// Gets or sets the currently navigated to <see cref="SarifErrorListItem"/>.
+        /// Gets or sets the currently navigated to <see cref="ErrorListItem"/>.
         /// </summary>
         /// <remarks>
         /// May be null.
