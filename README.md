@@ -1,5 +1,5 @@
 # ApsantaScanner
-Visual Studio extension to empower Securiy Code Scan C# analyzer.
+Visual Studio extension to empower Securiy Code Scan C# analyzer [project](https://github.com/security-code-scan/security-code-scan).
 
 ## What works
 ### Authentication: Github Apps with Device Flow.
