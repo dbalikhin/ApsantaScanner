@@ -381,6 +381,99 @@ End Namespace
             }
 
             [TestMethod]
+            public async Task MySqlInjection0()
+            {
+                var cSharpTest = $@"
+#pragma warning disable 8019
+    using System;
+    using System.Data.SqlClient;
+    using System.Data.Common;
+    using System.Data;
+    using System.Web.UI.WebControls;
+    using System.Data.Entity;
+    using System.Threading;
+    using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
+    using System.Data.SQLite;
+    using System.Web.Mvc;
+#pragma warning restore 8019
+
+namespace sample
+{{
+    public class MyFooController : Controller
+    {{
+        public void Run(string input, params object[] parameters)
+        {{
+            DoStuff(input);
+        }}
+
+        private void DoStuff(string stuffInput)
+        {{
+            new SQLiteCommand(stuffInput);
+        }}
+    }}
+}}
+";
+                var expected = new DiagnosticResult
+                {
+                    Id = "SCS0002",
+                    Severity = DiagnosticSeverity.Warning,
+                };
+                await VerifyCSharpDiagnostic(cSharpTest, expected).ConfigureAwait(false);
+
+            }
+
+            [TestMethod]
+            public async Task MySqlInjection2Sources()
+            {
+                var cSharpTest = $@"
+#pragma warning disable 8019
+    using System;
+    using System.Data.SqlClient;
+    using System.Data.Common;
+    using System.Data;
+    using System.Web.UI.WebControls;
+    using System.Data.Entity;
+    using System.Threading;
+    using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
+    using System.Data.SQLite;
+    using System.Web.Mvc;
+#pragma warning restore 8019
+
+namespace sample
+{{
+    public class MyFooController : Controller
+    {{
+        public void Run(string input, params object[] parameters)
+        {{
+            var doNotStuff = input + ""tainted"";
+            DoNotStuff(doNotStuff);
+            DoStuff(input);
+        }}
+
+        private void DoStuff(string stuffInput)
+        {{
+            new SQLiteCommand(stuffInput);
+        }}
+
+        private void DoNotStuff(string stuffNotInput)
+        {{
+            return;
+        }}
+
+
+    }}
+}}
+";
+                var expected = new DiagnosticResult
+                {
+                    Id = "SCS0002",
+                    Severity = DiagnosticSeverity.Warning,
+                };
+                await VerifyCSharpDiagnostic(cSharpTest, expected).ConfigureAwait(false);
+
+            }
+
+            [TestMethod]
             public async Task MySqlInjection()
             {
                 var cSharpTest = $@"
@@ -492,6 +585,167 @@ namespace sample
             new SQLiteCommand(sql);
             var sql2 = internalStuffInput;
             new SQLiteCommand(sql2);
+        }}
+    }}
+}}
+";
+                var expected = new DiagnosticResult
+                {
+                    Id = "SCS0002",
+                    Severity = DiagnosticSeverity.Warning,
+                };
+                await VerifyCSharpDiagnostic(cSharpTest, expected).ConfigureAwait(false);
+
+            }
+
+            private DiagnosticResult Expected = new DiagnosticResult
+            {
+                Id = "SCS0027",
+                Severity = DiagnosticSeverity.Warning,
+            };
+
+            [TestCategory("Detect")]
+            [TestMethod]
+            public async Task ConditionalOpenRedirect()
+            {
+                var cSharpTest1 = @"
+using Microsoft.AspNetCore.Mvc;
+
+public class OpenRedirectController : Controller
+{
+    public ActionResult Vulnerable(string scary)
+    {
+        var r = ConditionalRedirect(scary, false);
+        return r;
+    }
+
+    public ActionResult Safe(string notScary)
+    {
+        var r2 = ConditionalRedirect(notScary, true);
+        return r;
+    }
+
+    private ActionResult ConditionalRedirect(string url, bool internalOnly)
+    {
+        // pretend this does something
+        return null;
+    }
+}
+";
+                var cSharpTest2 = @"
+using Microsoft.AspNetCore.Mvc;
+
+public class OpenRedirectController : Controller
+{
+    public ActionResult Vulnerable(string scary1)
+    {
+        return ConditionalRedirect(scary1, false);
+    }
+
+    public ActionResult VulnerableNamed(string scary2)
+    {
+        return ConditionalRedirect(internalOnly: false, url: scary2);
+    }
+
+    public ActionResult Safe(string notScary1)
+    {
+        return ConditionalRedirect(notScary1);
+    }
+
+    public ActionResult SafeNamed1(string notScary2)
+    {
+        return ConditionalRedirect(url: notScary2);
+    }
+
+    public ActionResult SafeNamed2(string notScary3)
+    {
+        return ConditionalRedirect(internalOnly: true, url: notScary3);
+    }
+
+    private ActionResult ConditionalRedirect(string url, bool internalOnly = true)
+    {
+        // pretend this does something
+        return null;
+    }
+}
+";
+             
+
+
+                var testConfig = @"
+Sinks:
+  - Type: OpenRedirectController
+    TaintTypes:
+      - SCS0027
+    Methods:
+      - Name: ConditionalRedirect
+        Condition: [{""internalOnly"": False}]
+        Arguments:
+          - url
+";
+
+                var expectedCSharp1 =
+    new[]
+    {
+                    Expected.WithLocation(8, 36)
+    };
+
+                var expectedCSharp2 =
+                    new[]
+                    {
+                    Expected.WithLocation(8, 36),
+                    Expected.WithLocation(13, 57)
+                    };
+
+
+                var config = ConfigurationTest.CreateAnalyzersOptionsWithConfig(testConfig);
+                await VerifyCSharpDiagnostic(cSharpTest1, expectedCSharp1, options: config).ConfigureAwait(false);
+                await VerifyCSharpDiagnostic(cSharpTest2, expectedCSharp2, options: config).ConfigureAwait(false);
+
+
+            }
+
+            [TestMethod]
+            public async Task MySqlInjection3()
+            {
+                var cSharpTest = $@"
+#pragma warning disable 8019
+    using System;
+    using System.Data.SqlClient;
+    using System.Data.Common;
+    using System.Data;
+    using System.Web.UI.WebControls;
+    using System.Data.Entity;
+    using System.Threading;
+    using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
+    using System.Data.SQLite;
+    using System.Web.Mvc;
+#pragma warning restore 8019
+
+namespace sample
+{{
+    public class MyFooController : Controller
+    {{
+        public void Run(string input, params object[] parameters)
+        {{
+            if (input == ""notstuff"")
+                return DoNotStuff(input);
+
+            DoStuff(input);
+        }}
+
+        private void DoStuff(string stuffInput)
+        {{
+            if (stuffInput != null)
+            {{
+                var sql = ""SELECT * from table WHERE something="" + stuffInput;
+                new SQLiteCommand(sql);
+            }}            
+        }}
+
+        private void DoNotStuff(string stuffInput)
+        {{
+            return;           
         }}
     }}
 }}

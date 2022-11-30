@@ -258,46 +258,37 @@ namespace ApsantaScanner.Security
                                                         List<IOperation> taintedOperations = new();
                                                         AddCurrentLevelResults(initialTaintedOperations, taintedDataAnalysisResult, sourceSink);
 
-
-
                                                         void AddCurrentLevelResults(List<IOperation> operations, DataFlowAnalysisResult<TaintedDataBlockAnalysisResult, TaintedDataAbstractValue> taintedResult, TaintedDataSourceSink sourceSink)
                                                         {
-                                                            var invocationOperation = operations.FirstOrDefault(op => op.Kind is OperationKind.Invocation or OperationKind.DynamicInvocation);
-                                                            var downLevelExpression = invocationOperation?.Parent;
-
-                                                            var topLevelExpressions = operations.Where(o => o.Kind == OperationKind.ExpressionStatement && o.Parent == null && o != downLevelExpression);
-                                                            
-                                                            var topLevelSink = topLevelExpressions.FirstOrDefault(o => o.Syntax.GetLocation().SourceSpan.OverlapsWith(sourceSink.Sink.Location.SourceSpan));
-                                                            if (topLevelSink != null)
+                                                            var ops = operations.OrderBy(o => o.Syntax.GetLocation().SourceSpan.Start).ToArray();          
+                                                            taintedOperations.AddRange(ops.Where(i => i.Parent == null));
+                                                            if (taintedResult.InterproceduralResultCount() == 0)
                                                             {
-                                                                // no need to check further
-                                                                taintedOperations.Add(topLevelSink);
                                                                 return;
                                                             }
 
-                                                            // add results from the current method
-                                                            taintedOperations.AddRange(operations.Where(i => i.Parent == null).Except(topLevelExpressions));
-                                                            
-                                                            // if it is the wrong sink - remove it (what to do with SimpleAssignment tracking?)
-                                                            
-                                                            // taintedOperations.Remove(operations.FirstOrDefault(o => o.Kind == OperationKind.ExpressionStatement && o.Syntax.GetLocation() == sourceSink.Sink.Location));
-                                                            // assume there is only a single invocation in a method that leads from the specific source to the sink
-                                                            
-                                                            if (invocationOperation == null)
-                                                            {
-                                                                // need to exit earlier?
-                                                            }
+                                                            DataFlowAnalysisResult<TaintedDataBlockAnalysisResult, TaintedDataAbstractValue>? interoprocResults = null;
 
-                                                            if (taintedResult.InterproceduralResultAvailable())
+                                                            for (int i = 0; i < taintedResult.InterproceduralResultCount(); i++)
                                                             {
-                                                                var r = taintedResult.TryGetInterproceduralResult(invocationOperation);
-                                                                if (r != null)
-                                                                {
-                                                                    var taintedOps = r.GetTaintedOperations(sourceOrigin);
-
-                                                                    AddCurrentLevelResults(taintedOps, r, sourceSink);
+                                                                interoprocResults = taintedResult.GetInterproceduralResultByIndex(i);
+                                                                var r = (TaintedDataAnalysisResult)interoprocResults;
+                                                                //if (r.TaintedDataSourceSinks.Contains(sourceSink))
+                                                                if (r.TaintedDataSourceSinks.Length > 0)
+                                                                {                                                                    
+                                                                    break;
                                                                 }
                                                             }
+     
+                                                            //interoprocResults = taintedResult.TryGetInterproceduralResult(invocationOperation);                                                            
+                                                                
+                                                            if (interoprocResults != null)
+                                                            {
+                                                                var taintedOps = interoprocResults.GetTaintedOperations(sourceOrigin);
+
+                                                                AddCurrentLevelResults(taintedOps, interoprocResults, sourceSink);
+                                                            }
+                                                            
 
                                                         }
 
@@ -310,6 +301,14 @@ namespace ApsantaScanner.Security
                                                         {
                                                             additionalLocations[i + 1] = taintedOperations[i].Syntax.GetLocation();
                                                             sb.AppendLine(taintedOperations[i].Syntax.ToFullString());
+
+                                                            var node = additionalLocations[i + 1].SourceTree?.GetRoot()?.FindNode(additionalLocations[i + 1].SourceSpan);
+                                                            
+                                                            
+                                                            var s = node.ToFullString();
+                                                            SemanticModel semanticModel = compilation.GetSemanticModel(node.SyntaxTree);
+                                                            var symbol = semanticModel.GetDeclaredSymbol(node);
+                                                            var s2 = symbol as IPropertySymbol;
                                                         }
 
                                                         var messageArgs = new object[4 + additionalLocations.Length];
@@ -337,7 +336,7 @@ namespace ApsantaScanner.Security
                                                             messageArgs: messageArgs);
                                                         operationBlockAnalysisContext.ReportDiagnostic(diagnostic);
 
-                                                        /*
+                                                        /*s
                                                         string path = @"c:\temp\MyTest.txt";
                                                         // This text is added only once to the file.
                                                         if (!File.Exists(path))
